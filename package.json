@@ -1,6 +1,6 @@
 {
   "name": "genoma",
-  "version": "2026.3.2",
+  "version": "4.0.0",
   "description": "Genoma - Agente Inteligente Autoevolutivo con capacidades avanzadas de automatización, 42+ extensiones y browser automation",
   "keywords": ["ai", "agent", "automation", "chatbot", "telegram", "whatsapp", "discord", "slack", "browser-automation", "genoma"],
   "homepage": "https://github.com/your-org/genoma#readme",
@@ -14,7 +14,8 @@
     "url": "git+https://github.com/your-org/genoma.git"
   },
   "bin": {
-    "genoma": "genoma.mjs"
+    "genoma": "genoma.mjs",
+    "genoma-setup": "installer/bin/setup.mjs"
   },
   "directories": {
     "doc": "docs",
@@ -26,10 +27,12 @@
     "genoma.mjs",
     "README-header.png",
     "README.md",
+    "INSTALL.md",
     "assets/",
     "dist/",
     "docs/",
     "extensions/",
+    "installer/",
     "skills/"
   ],
   "type": "module",
@@ -51,6 +54,10 @@
     "./cli-entry": "./genoma.mjs"
   },
   "scripts": {
+    "setup": "node installer/bin/setup.mjs",
+    "setup:dev": "node installer/bin/setup.mjs --dev",
+    "setup:quick": "node installer/bin/setup.mjs --quick",
+    "doctor": "node installer/bin/setup.mjs doctor",
     "android:assemble": "cd apps/android && ./gradlew :app:assembleDebug",
     "android:format": "cd apps/android && ./gradlew :app:ktlintFormat :benchmark:ktlintFormat",
     "android:install": "cd apps/android && ./gradlew :app:installDebug",
@@ -166,6 +173,7 @@
     "@aws-sdk/client-bedrock": "^3.1000.0",
     "@buape/carbon": "0.0.0-beta-20260216184201",
     "@clack/prompts": "^1.0.1",
+    "ora": "^8.0.0",
     "@discordjs/voice": "^0.19.0",
     "@grammyjs/runner": "^2.0.3",
     "@grammyjs/transformer-throttler": "^1.2.1",

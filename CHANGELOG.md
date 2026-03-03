@@ -1,86 +1,96 @@
 # Changelog
 
-Todos los cambios notables en este proyecto serán documentados en este archivo.
+Todos los cambios notables de este proyecto serán documentados en este archivo.
 
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/),
-y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [4.0.0] - 2026-03-03
 
-## [3.0.0] - 2026-03-03
+### 🚀 Nueva Característica Principal: Instalador npm Profesional
 
-### Añadido
+#### Añadido
+- **Instalador npm profesional** con dos modos de operación:
+  - **Modo Usuario**: Wizard interactivo para usuarios finales
+  - **Modo Desarrollador**: Configuración completa para contribuidores
+  
+- **CLI mejorado** con nuevos comandos:
+  - `genoma setup` - Instalación interactiva
+  - `genoma setup --dev` - Modo desarrollador
+  - `genoma setup --quick` - Instalación rápida
+  - `genoma start/stop/status` - Control de servicios
+  - `genoma doctor` - Diagnóstico del sistema
+  - `genoma config` - Gestión de configuración
 
-#### 🛡️ Módulo de Seguridad (adaptado de Orbis)
+- **Estructura del instalador** (`installer/`):
+  - `bin/setup.mjs` - Entry point del CLI
+  - `cli/` - Implementación CLI con Commander.js
+  - `modes/` - Lógica para modos dev y producción
+  - `validators/` - Verificación de requisitos del sistema
+  - `config/` - Generadores de .env y genoma.json
+  - `utils/` - Utilidades y logger
 
-- **Sistema Inmune** (`src/security/ImmuneSystem.ts`)
-  - Monitoreo de fitness en ventanas deslizantes
-  - Detección de caídas de rendimiento >20% (configurable)
-  - Auto-rollback y cuarentena de genes problemáticos
-  - Status tracking: `active`, `retired`, `immune_blocked`, `quarantined`
-  - Integración con PGA FitnessTracker
+- **Prompts interactivos** con @clack/prompts:
+  - Selección de proveedor IA
+  - Configuración de canales
+  - Habilitación de PGA
 
-- **MutationEvaluator** (`src/security/MutationEvaluator.ts`)
-  - Validación sandbox de mutaciones antes del despliegue
-  - Test cases por categoría de gen (tool_usage, coding_patterns, response_style)
-  - Detección de patrones prohibidos (jailbreak, prompt injection)
-  - Evaluación LLM-as-judge opcional
-  - Scoring 6D: clarity, coherence, safety, effectiveness
+- **Validación de sistema**:
+  - Verifica Node.js >= 22.12.0
+  - Verifica pnpm >= 10.0.0
+  - Detecta dependencias opcionales (Docker, PostgreSQL)
 
-- **PromptInjectionGuard** (`src/security/PromptInjectionGuard.ts`)
-  - Detección de 8 tipos de ataques de inyección
-  - Modos: strict, moderate, permissive
-  - Sanitización automática de inputs maliciosos
-  - Logging y estadísticas de intentos bloqueados
-  - Patrones detectables:
-    - Instruction override
-    - Role hijacking
-    - Jailbreak attempts
-    - System prompt leakage
-    - Delimiter injection
-    - Encoding attacks
-    - Context manipulation
-    - Prompt smuggling
+- **Documentación**:
+  - `INSTALL.md` - Guía de instalación completa
+  - Actualización de README.md
 
-- **SecurityIntegration** (`src/security/SecurityIntegration.ts`)
-  - Capa unificada que integra los tres componentes
-  - Sistema de eventos para monitoreo
-  - API simplificada para uso en agentes
+#### Cambiado
+- Versión actualizada a 4.0.0
+- Nuevos scripts en package.json:
+  - `pnpm setup` / `pnpm setup:dev` / `pnpm setup:quick`
+  - `pnpm doctor`
 
-### Cambiado
-
-- Actualizado README.md con sección de seguridad
-- Roadmap actualizado: v2.0 completado, v3.0 en progreso
-
-### Seguridad
-
-- Implementadas 7+ capas de seguridad basadas en Orbis
-- Protección contra prompt injection con >30 patrones conocidos
-- Sistema inmune para auto-recuperación de genes degradados
-
-## [2.0.0] - 2026-03-03
-
-### Añadido
-
-- **PGA Platform** (Prompt Genómico Autoevolutivo)
-  - GenomeV2 con 3 cromosomas (C0, C1, C2)
-  - FitnessTracker con métricas 6D
-  - MutationOperator con estrategias evolutivas
-  - LayeredMemory para memoria semántica
-  - GeneRegistry para compartir genes entre agentes
-  - AgentIntegration para integración no-invasiva
-  - PGAAPI para acceso simplificado
-
-## [1.0.0] - 2026-02-15
-
-### Añadido
-
-- Fork inicial de OpenClaw
-- 42+ extensiones de mensajería
-- 54+ skills integrados
-- Soporte multi-proveedor de IA
-- Browser automation con Playwright
+#### Mejorado
+- UX del instalador con spinners y barras de progreso
+- Mensajes de error más descriptivos con sugerencias
+- Compatibilidad con múltiples proveedores IA
 
 ---
 
-[3.0.0]: https://github.com/LuisvelMarketer/genoma/compare/v2.0.0...v3.0.0
-[2.0.0]: https://github.com/LuisvelMarketer/genoma/compare/v1.0.0...v2.0.0
-[1.0.0]: https://github.com/LuisvelMarketer/genoma/releases/tag/v1.0.0
+## [3.0.0] - 2026-03-01
+
+### 🧬 Sistema PGA (Prompt Genómico Autoevolutivo)
+
+#### Añadido
+- **PGA Core** - Sistema de evolución genómica:
+  - GenomeV2 con 3 cromosomas (C0, C1, C2)
+  - GenomeKernel para integridad de C0
+  - FitnessTracker con métricas 6D
+  - MutationOperator con estrategias LLM
+  - GeneRegistry para genes compartidos
+
+- **Memoria por capas** (LayeredMemory)
+- **Evaluador híbrido** (heurístico + LLM)
+- **Integración no invasiva** con GenomaAgentPGABridge
+- **Hooks modulares** para agentes existentes
+- **API simplificada** (PGAAPI)
+
+---
+
+## [2.0.0] - 2026-02-15
+
+### Rebranding y Mejoras
+
+#### Añadido
+- Rebranding de OpenClaw a Genoma
+- 42+ extensiones
+- Browser automation con Playwright
+- Múltiples canales (Telegram, WhatsApp, Discord, Slack)
+
+---
+
+## [1.0.0] - 2026-01-01
+
+### Versión Inicial
+
+- Base del proyecto (fork de OpenClaw)
+- Gateway unificado
+- Sistema de extensiones
+- Soporte multi-proveedor IA
