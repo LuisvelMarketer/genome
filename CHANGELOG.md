@@ -1,90 +1,86 @@
 # Changelog
 
-Todos los cambios notables de este proyecto serán documentados en este archivo.
+Todos los cambios notables en este proyecto serán documentados en este archivo.
 
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
-y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/),
+y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.0.0] - 2026-03-03
+
+### Añadido
+
+#### 🛡️ Módulo de Seguridad (adaptado de Orbis)
+
+- **Sistema Inmune** (`src/security/ImmuneSystem.ts`)
+  - Monitoreo de fitness en ventanas deslizantes
+  - Detección de caídas de rendimiento >20% (configurable)
+  - Auto-rollback y cuarentena de genes problemáticos
+  - Status tracking: `active`, `retired`, `immune_blocked`, `quarantined`
+  - Integración con PGA FitnessTracker
+
+- **MutationEvaluator** (`src/security/MutationEvaluator.ts`)
+  - Validación sandbox de mutaciones antes del despliegue
+  - Test cases por categoría de gen (tool_usage, coding_patterns, response_style)
+  - Detección de patrones prohibidos (jailbreak, prompt injection)
+  - Evaluación LLM-as-judge opcional
+  - Scoring 6D: clarity, coherence, safety, effectiveness
+
+- **PromptInjectionGuard** (`src/security/PromptInjectionGuard.ts`)
+  - Detección de 8 tipos de ataques de inyección
+  - Modos: strict, moderate, permissive
+  - Sanitización automática de inputs maliciosos
+  - Logging y estadísticas de intentos bloqueados
+  - Patrones detectables:
+    - Instruction override
+    - Role hijacking
+    - Jailbreak attempts
+    - System prompt leakage
+    - Delimiter injection
+    - Encoding attacks
+    - Context manipulation
+    - Prompt smuggling
+
+- **SecurityIntegration** (`src/security/SecurityIntegration.ts`)
+  - Capa unificada que integra los tres componentes
+  - Sistema de eventos para monitoreo
+  - API simplificada para uso en agentes
+
+### Cambiado
+
+- Actualizado README.md con sección de seguridad
+- Roadmap actualizado: v2.0 completado, v3.0 en progreso
+
+### Seguridad
+
+- Implementadas 7+ capas de seguridad basadas en Orbis
+- Protección contra prompt injection con >30 patrones conocidos
+- Sistema inmune para auto-recuperación de genes degradados
 
 ## [2.0.0] - 2026-03-03
 
-### 🧬 PGA - Prompt Genómico Autoevolutivo
+### Añadido
 
-Nueva plataforma completa de evolución genómica para agentes de IA.
+- **PGA Platform** (Prompt Genómico Autoevolutivo)
+  - GenomeV2 con 3 cromosomas (C0, C1, C2)
+  - FitnessTracker con métricas 6D
+  - MutationOperator con estrategias evolutivas
+  - LayeredMemory para memoria semántica
+  - GeneRegistry para compartir genes entre agentes
+  - AgentIntegration para integración no-invasiva
+  - PGAAPI para acceso simplificado
 
-#### Added
+## [1.0.0] - 2026-02-15
 
-**Core Genómico**
-- `GenomeV2`: Estructura genómica de 3 cromosomas (C0, C1, C2)
-- `GenomeKernel`: Protección criptográfica SHA-256 para C0 inmutable
-- `GenomeManager`: CRUD y gestión del ciclo de vida de genomas
-- `FitnessTracker`: Sistema de evaluación 6D con métricas multidimensionales
-- `PromptAssembler`: Ensamblador de prompts con selección epsilon-greedy
-- `GeneRegistry`: Repositorio central de genes compartidos
+### Añadido
 
-**Sistema de Evolución**
-- `MutationOperator`: Estrategias de mutación (LLM rewrite, parameter tweak, simplify)
-- Auto-mutation basada en umbrales de fitness
-- Sistema de rollback automático con snapshots
-
-**Memoria y Adaptación**
-- `LayeredMemory`: Memoria semántica por usuario con expiración
-- Epigenoma de usuario (C2) para preferencias personalizadas
-- Patrones contextuales aprendidos
-
-**Integración No Invasiva**
-- `GenomaAgentPGABridge`: Bridge singleton para integración con agentes
-- `AgentIntegration`: Wrapper completo para agentes existentes
-- `PGAAPI`: API simplificada para operaciones comunes
-- `PGAHooks`: Hooks modulares (beforeAgentStart, afterAgentComplete, etc.)
-
-**Infraestructura**
-- `GenomaStorageAdapter`: Adaptador de storage in-memory
-- `GenomaLLMAdapter`: Adaptador LLM mock para desarrollo
-- `PGALogger`: Sistema de logging estructurado
-- `PGARollbackManager`: Gestión de snapshots y rollbacks
-- `PGAMetricsCollector`: Colector de métricas de evolución
-- `Evaluator`: Evaluación heurística y LLM-as-judge
-
-**Configuración**
-- `pga-integration.config.ts`: Configuración centralizada con feature flags
-- Configuraciones por entorno (development, production, testing)
-- Pesos configurables para métricas 6D
-
-**Base de Datos**
-- Schema PostgreSQL completo (`src/pga/database/schema.sql`)
-- Tablas: genomes, genes, mutation_logs, user_dna, semantic_facts, interactions
-- Vistas analíticas: v_gene_performance, v_mutation_activity, v_genome_stats
-
-**Tipos TypeScript**
-- Tipos completos para GenomeV2 y sus componentes
-- Interfaces para StorageAdapter y LLMAdapter
-- Tipos de integración Genoma-PGA
-
-#### Changed
-- README.md actualizado con documentación de PGA
-- Estructura de proyecto expandida con módulo `/src/pga/`
-
-#### Technical Details
-- Arquitectura modular con exports centralizados via index.ts
-- Compatibilidad ESM con extensiones .js en imports
-- Integración no invasiva que preserva funcionalidad existente
+- Fork inicial de OpenClaw
+- 42+ extensiones de mensajería
+- 54+ skills integrados
+- Soporte multi-proveedor de IA
+- Browser automation con Playwright
 
 ---
 
-## [1.0.0] - 2026-02-01
-
-### Initial Release
-
-Fork de OpenClaw con adaptaciones para Genoma.
-
-#### Added
-- 42+ extensiones de mensajería
-- 54+ skills integrados
-- Browser automation con Playwright
-- Terminal execution
-- Soporte multi-proveedor de IA (OpenAI, Anthropic, Google, Ollama)
-- Sistema de extensiones modular
-- Configuración por variables de entorno
-
-#### Based On
-- OpenClaw (MIT License) por Peter Steinberger y contribuidores
+[3.0.0]: https://github.com/LuisvelMarketer/genoma/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/LuisvelMarketer/genoma/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/LuisvelMarketer/genoma/releases/tag/v1.0.0

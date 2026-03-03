@@ -48,6 +48,11 @@ A diferencia de los prompts estáticos tradicionales, Genoma está diseñado par
 - **Social**: Twitch, Line, Nostr
 - **Más**: iMessage, BlueBubbles, Synology Chat, Nextcloud Talk
 
+### 🛡️ Seguridad Multicapa (v3.0)
+- **Sistema Inmune**: Auto-rollback automático cuando un gen tiene rendimiento degradado
+- **MutationEvaluator**: Validación sandbox de mutaciones antes del despliegue
+- **Prompt Injection Guard**: Detección y sanitización de ataques de inyección
+
 ### 🤖 54+ Skills Integrados
 - **Productividad**: Notion, Linear, Todoist, Airtable
 - **Multimedia**: Spotify, YouTube
@@ -276,14 +281,16 @@ npm run web
 - [x] Browser automation con Playwright
 - [x] Soporte multi-proveedor de IA
 
-### v2.0 (Próximamente) 🚧
-- [ ] Integración con PGA Platform (Prompt Genómico Autoevolutivo)
-- [ ] Sistema de evolución y aprendizaje automático
-- [ ] Registro genómico de agentes
-- [ ] Detección de drift en rendimiento
+### v2.0 ✅
+- [x] Integración con PGA Platform (Prompt Genómico Autoevolutivo)
+- [x] Sistema de evolución y aprendizaje automático
+- [x] Registro genómico de agentes
+- [x] Detección de drift en rendimiento
 
-### v3.0 (Futuro) 📋
-- [ ] Integración de seguridad Orbis
+### v3.0 (Actual) 🚧
+- [x] **Sistema Inmune** — Auto-rollback de genes con bajo rendimiento
+- [x] **MutationEvaluator** — Sandbox testing de mutaciones antes del deploy
+- [x] **Prompt Injection Guard** — Protección contra ataques de inyección
 - [ ] Auditoría y compliance
 - [ ] Cifrado de datos sensibles
 - [ ] Control de acceso granular
