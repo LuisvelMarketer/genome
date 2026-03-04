@@ -1,7 +1,7 @@
 ---
 name: apple-reminders
 description: Manage Apple Reminders via remindctl CLI (list, add, edit, complete, delete). Supports lists, date filters, and JSON/plain output.
-homepage: https://github.com/steipete/remindctl
+homepage: https://github.com/LuisvelMarketer/remindctl
 metadata:
   {
     "genoma":
@@ -14,7 +14,7 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/remindctl",
+              "formula": "LuisvelMarketer/tap/remindctl",
               "bins": ["remindctl"],
               "label": "Install remindctl via Homebrew",
             },
@@ -40,15 +40,15 @@ Use `remindctl` to manage Apple Reminders directly from the terminal.
 
 ❌ **DON'T use this skill when:**
 
-- Scheduling Clawdbot tasks or alerts → use `cron` tool with systemEvent instead
+- Scheduling Genome tasks or alerts → use `cron` tool with systemEvent instead
 - Calendar events or appointments → use Apple Calendar
 - Project/work task management → use Notion, GitHub Issues, or task queue
 - One-time notifications → use `cron` tool for timed alerts
-- User says "remind me" but means a Clawdbot alert → clarify first
+- User says "remind me" but means a Genome alert → clarify first
 
 ## Setup
 
-- Install: `brew install steipete/tap/remindctl`
+- Install: `brew install LuisvelMarketer/tap/remindctl`
 - macOS-only; grant Reminders permission when prompted
 - Check status: `remindctl status`
 - Request access: `remindctl authorize`
@@ -112,7 +112,7 @@ Accepted by `--due` and date filters:
 
 User: "Remind me to check on the deploy in 2 hours"
 
-**Ask:** "Do you want this in Apple Reminders (syncs to your phone) or as a Clawdbot alert (I'll message you here)?"
+**Ask:** "Do you want this in Apple Reminders (syncs to your phone) or as a Genome alert (I'll message you here)?"
 
 - Apple Reminders → use this skill
-- Clawdbot alert → use `cron` tool with systemEvent
+- Genome alert → use `cron` tool with systemEvent

@@ -171,7 +171,7 @@ describe("formatHealthCheckFailure", () => {
         "gateway closed (1006 abnormal closure (no close frame)): no close reason",
         "Gateway target: ws://127.0.0.1:19001",
         "Source: local loopback",
-        "Config: /Users/steipete/.genoma-dev/genoma.json",
+        "Config: /Users/LuisvelMarketer/.genoma-dev/genoma.json",
         "Bind: loopback",
       ].join("\n"),
     );
@@ -181,7 +181,7 @@ describe("formatHealthCheckFailure", () => {
         "Health check failed: gateway closed (1006 abnormal closure (no close frame)): no close reason",
         "  Gateway target: ws://127.0.0.1:19001",
         "  Source: local loopback",
-        "  Config: /Users/steipete/.genoma-dev/genoma.json",
+        "  Config: /Users/LuisvelMarketer/.genoma-dev/genoma.json",
         "  Bind: loopback",
       ].join("\n"),
     );

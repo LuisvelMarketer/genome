@@ -13,7 +13,7 @@ metadata:
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/eightctl/cmd/eightctl@latest",
+              "module": "github.com/LuisvelMarketer/eightctl/cmd/eightctl@latest",
               "bins": ["eightctl"],
               "label": "Install eightctl (go)",
             },

@@ -13,14 +13,14 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/ordercli",
+              "formula": "LuisvelMarketer/tap/ordercli",
               "bins": ["ordercli"],
               "label": "Install ordercli (brew)",
             },
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/ordercli/cmd/ordercli@latest",
+              "module": "github.com/LuisvelMarketer/ordercli/cmd/ordercli@latest",
               "bins": ["ordercli"],
               "label": "Install ordercli (go)",
             },

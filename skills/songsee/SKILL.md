@@ -1,7 +1,7 @@
 ---
 name: songsee
 description: Generate spectrograms and feature-panel visualizations from audio with the songsee CLI.
-homepage: https://github.com/steipete/songsee
+homepage: https://github.com/LuisvelMarketer/songsee
 metadata:
   {
     "genoma":
@@ -13,7 +13,7 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/songsee",
+              "formula": "LuisvelMarketer/tap/songsee",
               "bins": ["songsee"],
               "label": "Install songsee (brew)",
             },

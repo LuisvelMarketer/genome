@@ -4,7 +4,7 @@
     {
       "identity" : "commander",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/steipete/Commander.git",
+      "location" : "https://github.com/LuisvelMarketer/Commander.git",
       "state" : {
         "revision" : "9e349575c8e3c6745e81fe19e5bb5efa01b078ce",
         "version" : "0.2.1"

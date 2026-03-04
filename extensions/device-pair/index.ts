@@ -83,7 +83,7 @@ function parsePositiveInteger(raw: string | undefined): number | null {
 function resolveGatewayPort(cfg: GenomaPluginApi["config"]): number {
   const envPort =
     parsePositiveInteger(process.env.GENOMA_GATEWAY_PORT?.trim()) ??
-    parsePositiveInteger(process.env.CLAWDBOT_GATEWAY_PORT?.trim());
+    parsePositiveInteger(process.env.GENOMA_GATEWAY_PORT?.trim());
   if (envPort) {
     return envPort;
   }
@@ -186,13 +186,13 @@ function resolveAuth(cfg: GenomaPluginApi["config"]): ResolveAuthResult {
   const token =
     pickFirstDefined([
       process.env.GENOMA_GATEWAY_TOKEN,
-      process.env.CLAWDBOT_GATEWAY_TOKEN,
+      process.env.GENOMA_GATEWAY_TOKEN,
       cfg.gateway?.auth?.token,
     ]) ?? undefined;
   const password =
     pickFirstDefined([
       process.env.GENOMA_GATEWAY_PASSWORD,
-      process.env.CLAWDBOT_GATEWAY_PASSWORD,
+      process.env.GENOMA_GATEWAY_PASSWORD,
       cfg.gateway?.auth?.password,
     ]) ?? undefined;
 

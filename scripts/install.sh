@@ -944,19 +944,19 @@ map_legacy_env() {
     fi
 }
 
-map_legacy_env "GENOMA_TAGLINE_INDEX" "CLAWDBOT_TAGLINE_INDEX"
-map_legacy_env "GENOMA_NO_ONBOARD" "CLAWDBOT_NO_ONBOARD"
-map_legacy_env "GENOMA_NO_PROMPT" "CLAWDBOT_NO_PROMPT"
-map_legacy_env "GENOMA_DRY_RUN" "CLAWDBOT_DRY_RUN"
-map_legacy_env "GENOMA_INSTALL_METHOD" "CLAWDBOT_INSTALL_METHOD"
-map_legacy_env "GENOMA_VERSION" "CLAWDBOT_VERSION"
-map_legacy_env "GENOMA_BETA" "CLAWDBOT_BETA"
-map_legacy_env "GENOMA_GIT_DIR" "CLAWDBOT_GIT_DIR"
-map_legacy_env "GENOMA_GIT_UPDATE" "CLAWDBOT_GIT_UPDATE"
-map_legacy_env "GENOMA_NPM_LOGLEVEL" "CLAWDBOT_NPM_LOGLEVEL"
-map_legacy_env "GENOMA_VERBOSE" "CLAWDBOT_VERBOSE"
-map_legacy_env "GENOMA_PROFILE" "CLAWDBOT_PROFILE"
-map_legacy_env "GENOMA_INSTALL_SH_NO_RUN" "CLAWDBOT_INSTALL_SH_NO_RUN"
+map_legacy_env "GENOMA_TAGLINE_INDEX" "GENOMA_TAGLINE_INDEX"
+map_legacy_env "GENOMA_NO_ONBOARD" "GENOMA_NO_ONBOARD"
+map_legacy_env "GENOMA_NO_PROMPT" "GENOMA_NO_PROMPT"
+map_legacy_env "GENOMA_DRY_RUN" "GENOMA_DRY_RUN"
+map_legacy_env "GENOMA_INSTALL_METHOD" "GENOMA_INSTALL_METHOD"
+map_legacy_env "GENOMA_VERSION" "GENOMA_VERSION"
+map_legacy_env "GENOMA_BETA" "GENOMA_BETA"
+map_legacy_env "GENOMA_GIT_DIR" "GENOMA_GIT_DIR"
+map_legacy_env "GENOMA_GIT_UPDATE" "GENOMA_GIT_UPDATE"
+map_legacy_env "GENOMA_NPM_LOGLEVEL" "GENOMA_NPM_LOGLEVEL"
+map_legacy_env "GENOMA_VERBOSE" "GENOMA_VERBOSE"
+map_legacy_env "GENOMA_PROFILE" "GENOMA_PROFILE"
+map_legacy_env "GENOMA_INSTALL_SH_NO_RUN" "GENOMA_INSTALL_SH_NO_RUN"
 
 pick_tagline() {
     append_holiday_taglines
@@ -1979,7 +1979,7 @@ run_bootstrap_onboarding_if_needed() {
     fi
 
     local config_path="${GENOMA_CONFIG_PATH:-$HOME/.genoma/genoma.json}"
-    if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" || -f "$HOME/.moltbot/moltbot.json" || -f "$HOME/.moldbot/moldbot.json" ]]; then
+    if [[ -f "${config_path}" || -f "$HOME/.genome/genome.json" || -f "$HOME/.genome/genome.json" || -f "$HOME/.moldbot/moldbot.json" ]]; then
         return
     fi
 
@@ -2325,7 +2325,7 @@ main() {
             ui_info "Skipping onboard (requested); run genoma onboard later"
         else
             local config_path="${GENOMA_CONFIG_PATH:-$HOME/.genoma/genoma.json}"
-            if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" || -f "$HOME/.moltbot/moltbot.json" || -f "$HOME/.moldbot/moldbot.json" ]]; then
+            if [[ -f "${config_path}" || -f "$HOME/.genome/genome.json" || -f "$HOME/.genome/genome.json" || -f "$HOME/.moldbot/moldbot.json" ]]; then
                 ui_info "Config already present; running doctor"
                 run_doctor
                 should_open_dashboard=true

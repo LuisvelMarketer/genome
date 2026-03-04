@@ -1,0 +1,11 @@
+{
+  "name": "@genoma/pga",
+  "version": "2026.3.4",
+  "description": "Genoma PGA (Prompt Genomico Autoevolutivo) extension plugin",
+  "type": "module",
+  "genoma": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

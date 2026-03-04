@@ -14,7 +14,7 @@ metadata:
               "id": "brew",
               "kind": "brew",
               "formula": "spogo",
-              "tap": "steipete/tap",
+              "tap": "LuisvelMarketer/tap",
               "bins": ["spogo"],
               "label": "Install spogo (brew)",
             },

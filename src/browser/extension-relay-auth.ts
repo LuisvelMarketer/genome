@@ -7,7 +7,7 @@ const GENOMA_RELAY_BROWSER = "Genoma/extension-relay";
 
 function resolveGatewayAuthToken(): string | null {
   const envToken =
-    process.env.GENOMA_GATEWAY_TOKEN?.trim() || process.env.CLAWDBOT_GATEWAY_TOKEN?.trim();
+    process.env.GENOMA_GATEWAY_TOKEN?.trim() || process.env.GENOMA_GATEWAY_TOKEN?.trim();
   if (envToken) {
     return envToken;
   }

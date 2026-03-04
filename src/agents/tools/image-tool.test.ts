@@ -615,7 +615,7 @@ describe("image tool implicit imageModel config", () => {
 
     const res = await tool.execute("t1", {
       prompt: "Describe the image.",
-      image: "@/Users/steipete/.genoma/media/inbound/photo.png",
+      image: "@/Users/LuisvelMarketer/.genoma/media/inbound/photo.png",
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);

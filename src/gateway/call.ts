@@ -148,7 +148,7 @@ export function buildGatewayConnectionDetails(
   const envUrlOverride = cliUrlOverride
     ? undefined
     : (trimToUndefined(process.env.GENOMA_GATEWAY_URL) ??
-      trimToUndefined(process.env.CLAWDBOT_GATEWAY_URL));
+      trimToUndefined(process.env.GENOMA_GATEWAY_URL));
   const urlOverride = cliUrlOverride ?? envUrlOverride;
   const remoteUrl =
     typeof remote?.url === "string" && remote.url.trim().length > 0 ? remote.url.trim() : undefined;
@@ -261,7 +261,7 @@ function resolveGatewayCallContext(opts: CallGatewayBaseOptions): ResolvedGatewa
   const envUrlOverride = cliUrlOverride
     ? undefined
     : (trimToUndefined(process.env.GENOMA_GATEWAY_URL) ??
-      trimToUndefined(process.env.CLAWDBOT_GATEWAY_URL));
+      trimToUndefined(process.env.GENOMA_GATEWAY_URL));
   const urlOverride = cliUrlOverride ?? envUrlOverride;
   const urlOverrideSource = cliUrlOverride ? "cli" : envUrlOverride ? "env" : undefined;
   const remoteUrl = trimToUndefined(remote?.url);

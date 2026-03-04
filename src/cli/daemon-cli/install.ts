@@ -67,9 +67,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
       });
       if (!json) {
         defaultRuntime.log(`Gateway service already ${service.loadedText}.`);
-        defaultRuntime.log(
-          `Reinstall with: ${formatCliCommand("genoma gateway install --force")}`,
-        );
+        defaultRuntime.log(`Reinstall with: ${formatCliCommand("genoma gateway install --force")}`);
       }
       return;
     }
@@ -88,7 +86,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
     opts.token ||
     cfg.gateway?.auth?.token ||
     process.env.GENOMA_GATEWAY_TOKEN ||
-    process.env.CLAWDBOT_GATEWAY_TOKEN;
+    process.env.GENOMA_GATEWAY_TOKEN;
 
   if (!token && needsToken) {
     token = randomToken();

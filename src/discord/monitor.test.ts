@@ -219,7 +219,7 @@ describe("discord allowlist helpers", () => {
 
   it("matches ids by default and names only when enabled", () => {
     const allow = normalizeDiscordAllowList(
-      ["123", "steipete", "Friends of Genoma"],
+      ["123", "LuisvelMarketer", "Friends of Genoma"],
       ["discord:", "user:", "guild:", "channel:"],
     );
     expect(allow).not.toBeNull();
@@ -227,9 +227,11 @@ describe("discord allowlist helpers", () => {
       throw new Error("Expected allow list to be normalized");
     }
     expect(allowListMatches(allow, { id: "123" })).toBe(true);
-    expect(allowListMatches(allow, { name: "steipete" })).toBe(false);
+    expect(allowListMatches(allow, { name: "LuisvelMarketer" })).toBe(false);
     expect(allowListMatches(allow, { name: "friends-of-genoma" })).toBe(false);
-    expect(allowListMatches(allow, { name: "steipete" }, { allowNameMatching: true })).toBe(true);
+    expect(allowListMatches(allow, { name: "LuisvelMarketer" }, { allowNameMatching: true })).toBe(
+      true,
+    );
     expect(
       allowListMatches(allow, { name: "friends-of-genoma" }, { allowNameMatching: true }),
     ).toBe(true);
@@ -782,7 +784,7 @@ describe("discord reaction notification gating", () => {
           botId: "bot-1",
           messageAuthorId: "user-1",
           userId: "123",
-          userName: "steipete",
+          userName: "LuisvelMarketer",
           allowlist: ["123", "other"] as string[],
         },
         expected: true,

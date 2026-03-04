@@ -1,11 +1,11 @@
 /**
  * @fileoverview Configuración de integración PGA con Genoma
- * 
+ *
  * Este archivo define las configuraciones para habilitar/deshabilitar
  * y ajustar el comportamiento del sistema PGA en Genoma.
  */
 
-import type { PGAAgentIntegrationConfig } from '../integration/AgentIntegration.js';
+import type { PGAAgentIntegrationConfig } from "../integration/AgentIntegration.js";
 
 // ============================================================================
 // Feature Flags
@@ -58,9 +58,17 @@ export interface EvolutionConfig {
   /** Maximum mutations per evolution cycle */
   maxMutationsPerCycle: number;
   /** Mutation strategies to use */
-  mutationStrategies: ('llm_rewrite' | 'parameter_tweak' | 'simplify' | 'combine')[];
+  mutationStrategies: ("llm_rewrite" | "parameter_tweak" | "simplify" | "combine" | "compress")[];
   /** Cooldown period between mutations (ms) */
   mutationCooldownMs: number;
+  /** Maximum tokens for C1 gene injection */
+  c1TokenBudget: number;
+  /** Genes above this token count are candidates for compression */
+  compressionTokenThreshold: number;
+  /** Minimum functional fitness to trigger compress instead of rewrite */
+  compressionFitnessThreshold: number;
+  /** Compress token-heavy genes at initialization (before first execution) */
+  eagerCompress: boolean;
 }
 
 export const DEFAULT_EVOLUTION_CONFIG: EvolutionConfig = {
@@ -68,8 +76,12 @@ export const DEFAULT_EVOLUTION_CONFIG: EvolutionConfig = {
   fitnessThreshold: 0.6,
   rollbackThreshold: 0.15,
   maxMutationsPerCycle: 3,
-  mutationStrategies: ['llm_rewrite', 'simplify'],
+  mutationStrategies: ["llm_rewrite", "simplify", "compress"],
   mutationCooldownMs: 60000, // 1 minute
+  c1TokenBudget: 2000,
+  compressionTokenThreshold: 100,
+  compressionFitnessThreshold: 0.7,
+  eagerCompress: true,
 };
 
 // ============================================================================
@@ -96,10 +108,10 @@ export const DEFAULT_FITNESS_CONFIG: FitnessConfig = {
   weights: {
     accuracy: 0.25,
     speed: 0.15,
-    cost: 0.10,
-    safety: 0.20,
-    userSatisfaction: 0.20,
-    adaptability: 0.10,
+    cost: 0.1,
+    safety: 0.2,
+    userSatisfaction: 0.2,
+    adaptability: 0.1,
   },
   emaAlpha: 0.3,
   minSamplesForStability: 10,
@@ -111,7 +123,7 @@ export const DEFAULT_FITNESS_CONFIG: FitnessConfig = {
 
 export interface StorageConfig {
   /** Storage backend type */
-  type: 'memory' | 'file' | 'database';
+  type: "memory" | "file" | "database";
   /** File path for file storage */
   filePath?: string;
   /** Database connection string */
@@ -125,7 +137,7 @@ export interface StorageConfig {
 }
 
 export const DEFAULT_STORAGE_CONFIG: StorageConfig = {
-  type: 'memory',
+  type: "memory",
   maxSnapshots: 10,
   maxInteractions: 1000,
   maxMutations: 500,
@@ -199,27 +211,36 @@ export const TESTING_PGA_CONFIG: Partial<PGAConfig> = {
  * Get PGA configuration for current environment
  */
 export function getPGAConfigForEnvironment(env?: string): PGAConfig {
-  const environment = env ?? process.env.NODE_ENV ?? 'development';
-  
+  const environment = env ?? process.env.NODE_ENV ?? "development";
+
+  let config: PGAConfig;
   switch (environment) {
-    case 'production':
-      return mergeConfigs(DEFAULT_PGA_CONFIG, PRODUCTION_PGA_CONFIG);
-    case 'test':
-    case 'testing':
-      return mergeConfigs(DEFAULT_PGA_CONFIG, TESTING_PGA_CONFIG);
-    case 'development':
+    case "production":
+      config = mergeConfigs(DEFAULT_PGA_CONFIG, PRODUCTION_PGA_CONFIG);
+      break;
+    case "test":
+    case "testing":
+      config = mergeConfigs(DEFAULT_PGA_CONFIG, TESTING_PGA_CONFIG);
+      break;
+    case "development":
     default:
-      return mergeConfigs(DEFAULT_PGA_CONFIG, DEVELOPMENT_PGA_CONFIG);
+      config = mergeConfigs(DEFAULT_PGA_CONFIG, DEVELOPMENT_PGA_CONFIG);
+      break;
   }
+
+  // GENOMA_PGA_ENABLED env var overrides the environment default
+  const pgaEnv = process.env.GENOMA_PGA_ENABLED;
+  if (pgaEnv !== undefined) {
+    config.featureFlags.enabled = pgaEnv === "true" || pgaEnv === "1";
+  }
+
+  return config;
 }
 
 /**
  * Merge partial config with defaults
  */
-export function mergeConfigs(
-  base: PGAConfig,
-  override: Partial<PGAConfig>
-): PGAConfig {
+export function mergeConfigs(base: PGAConfig, override: Partial<PGAConfig>): PGAConfig {
   return {
     featureFlags: { ...base.featureFlags, ...override.featureFlags },
     evolution: { ...base.evolution, ...override.evolution },
@@ -234,7 +255,7 @@ export function mergeConfigs(
 export function toPGAAgentIntegrationConfig(
   config: PGAConfig,
   agentId: string,
-  userId?: string
+  userId?: string,
 ): PGAAgentIntegrationConfig {
   return {
     enabled: config.featureFlags.enabled,
@@ -254,30 +275,30 @@ export function toPGAAgentIntegrationConfig(
  */
 export function validatePGAConfig(config: PGAConfig): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
-  
+
   // Validate evolution config
   if (config.evolution.mutationInterval < 1) {
-    errors.push('mutationInterval must be at least 1');
+    errors.push("mutationInterval must be at least 1");
   }
   if (config.evolution.fitnessThreshold < 0 || config.evolution.fitnessThreshold > 1) {
-    errors.push('fitnessThreshold must be between 0 and 1');
+    errors.push("fitnessThreshold must be between 0 and 1");
   }
   if (config.evolution.rollbackThreshold < 0 || config.evolution.rollbackThreshold > 1) {
-    errors.push('rollbackThreshold must be between 0 and 1');
+    errors.push("rollbackThreshold must be between 0 and 1");
   }
-  
+
   // Validate fitness weights sum
   const weights = Object.values(config.fitness.weights);
   const weightSum = weights.reduce((a, b) => a + b, 0);
   if (Math.abs(weightSum - 1) > 0.01) {
     errors.push(`Fitness weights must sum to 1, got ${weightSum}`);
   }
-  
+
   // Validate storage config
   if (config.storage.maxSnapshots < 1) {
-    errors.push('maxSnapshots must be at least 1');
+    errors.push("maxSnapshots must be at least 1");
   }
-  
+
   return {
     valid: errors.length === 0,
     errors,

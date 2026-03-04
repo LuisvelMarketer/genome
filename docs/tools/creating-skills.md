@@ -55,4 +55,4 @@ Ask your agent to "refresh skills" or restart the gateway. Genoma will discover 
 
 ## Shared Skills
 
-You can also browse and contribute skills to [ClawHub](https://clawhub.com).
+You can also browse and contribute skills to [Genome](https://genome.com).

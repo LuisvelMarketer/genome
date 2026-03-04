@@ -13,14 +13,14 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/wacli",
+              "formula": "LuisvelMarketer/tap/wacli",
               "bins": ["wacli"],
               "label": "Install wacli (brew)",
             },
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/wacli/cmd/wacli@latest",
+              "module": "github.com/LuisvelMarketer/wacli/cmd/wacli@latest",
               "bins": ["wacli"],
               "label": "Install wacli (go)",
             },

@@ -1,4 +1,4 @@
-import type { ClawdbotConfig, PluginRuntime, RuntimeEnv } from "genoma/plugin-sdk";
+import type { GenomeConfig, PluginRuntime, RuntimeEnv } from "genoma/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { hasControlCommand } from "../../../src/auto-reply/command-detection.js";
 import {
@@ -36,7 +36,7 @@ vi.mock("./monitor.transport.js", () => ({
   monitorWebhook: monitorWebhookMock,
 }));
 
-const cfg = {} as ClawdbotConfig;
+const cfg = {} as GenomeConfig;
 
 function makeReactionEvent(
   overrides: Partial<FeishuReactionCreatedEvent> = {},
@@ -52,7 +52,7 @@ function makeReactionEvent(
 
 type FeishuMention = NonNullable<FeishuMessageEvent["message"]["mentions"]>[number];
 
-function buildDebounceConfig(): ClawdbotConfig {
+function buildDebounceConfig(): GenomeConfig {
   return {
     messages: {
       inbound: {
@@ -67,7 +67,7 @@ function buildDebounceConfig(): ClawdbotConfig {
         enabled: true,
       },
     },
-  } as ClawdbotConfig;
+  } as GenomeConfig;
 }
 
 function buildDebounceAccount(): ResolvedFeishuAccount {
@@ -186,7 +186,7 @@ describe("resolveReactionSyntheticEvent", () => {
             reactionNotifications: "off",
           },
         },
-      } as ClawdbotConfig,
+      } as GenomeConfig,
       accountId: "default",
       event,
       botOpenId: "ou_bot",
@@ -230,7 +230,7 @@ describe("resolveReactionSyntheticEvent", () => {
             reactionNotifications: "all",
           },
         },
-      } as ClawdbotConfig,
+      } as GenomeConfig,
       accountId: "default",
       event,
       botOpenId: "ou_bot",

@@ -73,7 +73,7 @@ describe("doctor command", () => {
       findLegacyGatewayServices.mockResolvedValueOnce([
         {
           platform: "darwin",
-          label: "com.steipete.genoma.gateway",
+          label: "com.LuisvelMarketer.genoma.gateway",
           detail: "loaded",
         },
       ]);

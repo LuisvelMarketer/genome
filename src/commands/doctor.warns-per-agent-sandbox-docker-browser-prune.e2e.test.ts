@@ -62,18 +62,18 @@ describe("doctor command", () => {
   it("does not warn when only the active workspace is present", async () => {
     mockDoctorConfigSnapshot({
       config: {
-        agents: { defaults: { workspace: "/Users/steipete/genoma" } },
+        agents: { defaults: { workspace: "/Users/LuisvelMarketer/genoma" } },
       },
     });
 
     note.mockClear();
-    const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/Users/steipete");
+    const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/Users/LuisvelMarketer");
     const realExists = fs.existsSync;
-    const legacyPath = path.join("/Users/steipete", "genoma");
+    const legacyPath = path.join("/Users/LuisvelMarketer", "genoma");
     const legacyAgentsPath = path.join(legacyPath, "AGENTS.md");
     const existsSpy = vi.spyOn(fs, "existsSync").mockImplementation((value) => {
       if (
-        value === "/Users/steipete/genoma" ||
+        value === "/Users/LuisvelMarketer/genoma" ||
         value === legacyPath ||
         value === legacyAgentsPath
       ) {

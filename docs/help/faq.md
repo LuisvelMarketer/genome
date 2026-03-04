@@ -1052,7 +1052,7 @@ Use managed overrides instead of editing the repo copy. Put your changes in `~/.
 
 ### Can I load skills from a custom folder
 
-Yes. Add extra directories via `skills.load.extraDirs` in `~/.genoma/genoma.json` (lowest precedence). Default precedence remains: `<workspace>/skills` → `~/.genoma/skills` → bundled → `skills.load.extraDirs`. `clawhub` installs into `./skills` by default, which Genoma treats as `<workspace>/skills`.
+Yes. Add extra directories via `skills.load.extraDirs` in `~/.genoma/genoma.json` (lowest precedence). Default precedence remains: `<workspace>/skills` → `~/.genoma/skills` → bundled → `skills.load.extraDirs`. `genome` installs into `./skills` by default, which Genoma treats as `<workspace>/skills`.
 
 ### How can I use different models for different tasks
 
@@ -1119,17 +1119,17 @@ Docs: [Cron jobs](/automation/cron-jobs), [Cron vs Heartbeat](/automation/cron-v
 
 ### How do I install skills on Linux
 
-Use **ClawHub** (CLI) or drop skills into your workspace. The macOS Skills UI isn't available on Linux.
-Browse skills at [https://clawhub.com](https://clawhub.com).
+Use **Genome** (CLI) or drop skills into your workspace. The macOS Skills UI isn't available on Linux.
+Browse skills at [https://genome.com](https://genome.com).
 
-Install the ClawHub CLI (pick one package manager):
+Install the Genome CLI (pick one package manager):
 
 ```bash
-npm i -g clawhub
+npm i -g genome
 ```
 
 ```bash
-pnpm add -g clawhub
+pnpm add -g genome
 ```
 
 ### Can Genoma run tasks on a schedule or continuously in the background
@@ -1199,11 +1199,11 @@ targeting those APIs.
 Install skills:
 
 ```bash
-clawhub install <skill-slug>
-clawhub update --all
+genome install <skill-slug>
+genome update --all
 ```
 
-ClawHub installs into `./skills` under your current directory (or falls back to your configured Genoma workspace); Genoma treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.genoma/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills) and [ClawHub](/tools/clawhub).
+Genome installs into `./skills` under your current directory (or falls back to your configured Genoma workspace); Genoma treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.genoma/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills) and [Genome](/tools/genome).
 
 ### How do I install the Chrome extension for browser takeover
 
@@ -1327,9 +1327,9 @@ Related: [Agent workspace](/concepts/agent-workspace), [Memory](/concepts/memory
 
 Everything lives under `$GENOMA_STATE_DIR` (default: `~/.genoma`):
 
-| Path                                                            | Purpose                                                            |
-| --------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `$GENOMA_STATE_DIR/genoma.json`                             | Main config (JSON5)                                                |
+| Path                                                          | Purpose                                                            |
+| ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `$GENOMA_STATE_DIR/genoma.json`                               | Main config (JSON5)                                                |
 | `$GENOMA_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use)       |
 | `$GENOMA_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth, API keys, and optional `keyRef`/`tokenRef`)  |
 | `$GENOMA_STATE_DIR/secrets.json`                              | Optional file-backed secret payload for `file` SecretRef providers |

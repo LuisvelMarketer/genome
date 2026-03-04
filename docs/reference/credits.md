@@ -11,7 +11,7 @@ Genoma = CLAW + TARDIS, because every space lobster needs a time and space machi
 
 ## Credits
 
-- **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Creator, lobster whisperer
+- **Luis Alfredo Velasquez Duran** ([@LuisvelMarketer](https://x.com/LuisvelMarketer)) - Creator, lobster whisperer
 - **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Pi creator, security pen tester
 - **Clawd** - The space lobster who demanded a better name
 

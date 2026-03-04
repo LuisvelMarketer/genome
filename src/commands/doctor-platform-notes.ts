@@ -73,8 +73,8 @@ export async function noteMacLaunchctlGatewayEnvOverrides(
 
   const getenv = deps?.getenv ?? launchctlGetenv;
   const deprecatedLaunchctlEntries = [
-    ["CLAWDBOT_GATEWAY_TOKEN", await getenv("CLAWDBOT_GATEWAY_TOKEN")],
-    ["CLAWDBOT_GATEWAY_PASSWORD", await getenv("CLAWDBOT_GATEWAY_PASSWORD")],
+    ["GENOMA_GATEWAY_TOKEN", await getenv("GENOMA_GATEWAY_TOKEN")],
+    ["GENOMA_GATEWAY_PASSWORD", await getenv("GENOMA_GATEWAY_PASSWORD")],
   ].filter((entry): entry is [string, string] => Boolean(entry[1]?.trim()));
   if (deprecatedLaunchctlEntries.length > 0) {
     const lines = [
@@ -87,9 +87,7 @@ export async function noteMacLaunchctlGatewayEnvOverrides(
     (deps?.noteFn ?? note)(lines.join("\n"), "Gateway (macOS)");
   }
 
-  const tokenEntries = [
-    ["GENOMA_GATEWAY_TOKEN", await getenv("GENOMA_GATEWAY_TOKEN")],
-  ] as const;
+  const tokenEntries = [["GENOMA_GATEWAY_TOKEN", await getenv("GENOMA_GATEWAY_TOKEN")]] as const;
   const passwordEntries = [
     ["GENOMA_GATEWAY_PASSWORD", await getenv("GENOMA_GATEWAY_PASSWORD")],
   ] as const;
@@ -124,7 +122,7 @@ export function noteDeprecatedLegacyEnvVars(
   deps?: { noteFn?: typeof note },
 ) {
   const entries = Object.entries(env)
-    .filter(([key, value]) => key.startsWith("CLAWDBOT_") && value?.trim())
+    .filter(([key, value]) => key.startsWith("GENOMA_") && value?.trim())
     .map(([key]) => key);
   if (entries.length === 0) {
     return;

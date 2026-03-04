@@ -121,7 +121,7 @@ function parseNumber(value: string | undefined, fallback: number): number {
 }
 
 function resolveStateDir(): string {
-  const override = process.env.GENOMA_STATE_DIR?.trim() || process.env.CLAWDBOT_STATE_DIR?.trim();
+  const override = process.env.GENOMA_STATE_DIR?.trim() || process.env.GENOMA_STATE_DIR?.trim();
   if (override) {
     return override.startsWith("~")
       ? path.resolve(process.env.HOME || "", override.slice(1))
@@ -191,12 +191,12 @@ function parseArgs(): Args {
   const channelId =
     resolveArg("--channel") ||
     process.env.GENOMA_DISCORD_SMOKE_CHANNEL_ID ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_CHANNEL_ID ||
+    process.env.GENOMA_DISCORD_SMOKE_CHANNEL_ID ||
     "";
   const driverModeRaw =
     resolveArg("--driver") ||
     process.env.GENOMA_DISCORD_SMOKE_DRIVER ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_DRIVER ||
+    process.env.GENOMA_DISCORD_SMOKE_DRIVER ||
     "token";
   const normalizedDriverMode = driverModeRaw.trim().toLowerCase();
   const driverMode: DriverMode =
@@ -210,34 +210,32 @@ function parseArgs(): Args {
   const driverToken =
     resolveArg("--token") ||
     process.env.GENOMA_DISCORD_SMOKE_DRIVER_TOKEN ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_DRIVER_TOKEN ||
+    process.env.GENOMA_DISCORD_SMOKE_DRIVER_TOKEN ||
     "";
   const driverTokenPrefix =
     resolveArg("--token-prefix") || process.env.GENOMA_DISCORD_SMOKE_DRIVER_TOKEN_PREFIX || "Bot";
   const botToken =
     resolveArg("--bot-token") ||
     process.env.GENOMA_DISCORD_SMOKE_BOT_TOKEN ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_BOT_TOKEN ||
+    process.env.GENOMA_DISCORD_SMOKE_BOT_TOKEN ||
     process.env.DISCORD_BOT_TOKEN ||
     "";
   const botTokenPrefix =
-    resolveArg("--bot-token-prefix") ||
-    process.env.GENOMA_DISCORD_SMOKE_BOT_TOKEN_PREFIX ||
-    "Bot";
+    resolveArg("--bot-token-prefix") || process.env.GENOMA_DISCORD_SMOKE_BOT_TOKEN_PREFIX || "Bot";
   const targetAgent =
     resolveArg("--agent") ||
     process.env.GENOMA_DISCORD_SMOKE_AGENT ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_AGENT ||
+    process.env.GENOMA_DISCORD_SMOKE_AGENT ||
     "codex";
   const mentionUserId =
     resolveArg("--mention") ||
     process.env.GENOMA_DISCORD_SMOKE_MENTION_USER_ID ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_MENTION_USER_ID ||
+    process.env.GENOMA_DISCORD_SMOKE_MENTION_USER_ID ||
     undefined;
   const instruction =
     resolveArg("--instruction") ||
     process.env.GENOMA_DISCORD_SMOKE_INSTRUCTION ||
-    process.env.CLAWDBOT_DISCORD_SMOKE_INSTRUCTION ||
+    process.env.GENOMA_DISCORD_SMOKE_INSTRUCTION ||
     undefined;
   const timeoutMs = parseNumber(
     resolveArg("--timeout-ms") || process.env.GENOMA_DISCORD_SMOKE_TIMEOUT_MS,

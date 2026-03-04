@@ -1,74 +1,50 @@
 # Changelog
 
-Todos los cambios notables de este proyecto serán documentados en este archivo.
+Todos los cambios notables de este proyecto seran documentados en este archivo.
 
 ## [4.0.0] - 2026-03-03
 
-### 🚀 Nueva Característica Principal: Instalador npm Profesional
+### Nueva Caracteristica Principal: Compresion Evolutiva de Tokens
 
-#### Añadido
-- **Instalador npm profesional** con dos modos de operación:
+#### Agregado
+
+- **Compresion evolutiva de tokens** en PGA:
+  - Estrategia `compress` en MutationOperator con gate de compresion
+  - Presupuesto de tokens (2000 max) en PromptAssembler con ranking por eficiencia
+  - Compresion eager al inicializar (`eagerCompressGenes`)
+  - Utilidades de tokens: `estimateTokenCount`, `tokenEfficiency`, `compressionRatio`
+  - Campo `tokenCount` en OperativeGene
+
+- **Instalador npm profesional** con dos modos de operacion:
   - **Modo Usuario**: Wizard interactivo para usuarios finales
-  - **Modo Desarrollador**: Configuración completa para contribuidores
-  
+  - **Modo Desarrollador**: Configuracion completa para contribuidores
+
 - **CLI mejorado** con nuevos comandos:
-  - `genoma setup` - Instalación interactiva
+  - `genoma setup` - Instalacion interactiva
   - `genoma setup --dev` - Modo desarrollador
-  - `genoma setup --quick` - Instalación rápida
+  - `genoma setup --quick` - Instalacion rapida
   - `genoma start/stop/status` - Control de servicios
-  - `genoma doctor` - Diagnóstico del sistema
-  - `genoma config` - Gestión de configuración
-
-- **Estructura del instalador** (`installer/`):
-  - `bin/setup.mjs` - Entry point del CLI
-  - `cli/` - Implementación CLI con Commander.js
-  - `modes/` - Lógica para modos dev y producción
-  - `validators/` - Verificación de requisitos del sistema
-  - `config/` - Generadores de .env y genoma.json
-  - `utils/` - Utilidades y logger
-
-- **Prompts interactivos** con @clack/prompts:
-  - Selección de proveedor IA
-  - Configuración de canales
-  - Habilitación de PGA
-
-- **Validación de sistema**:
-  - Verifica Node.js >= 22.12.0
-  - Verifica pnpm >= 10.0.0
-  - Detecta dependencias opcionales (Docker, PostgreSQL)
-
-- **Documentación**:
-  - `INSTALL.md` - Guía de instalación completa
-  - Actualización de README.md
-
-#### Cambiado
-- Versión actualizada a 4.0.0
-- Nuevos scripts en package.json:
-  - `pnpm setup` / `pnpm setup:dev` / `pnpm setup:quick`
-  - `pnpm doctor`
-
-#### Mejorado
-- UX del instalador con spinners y barras de progreso
-- Mensajes de error más descriptivos con sugerencias
-- Compatibilidad con múltiples proveedores IA
+  - `genoma doctor` - Diagnostico del sistema
+  - `genoma config` - Gestion de configuracion
 
 ---
 
 ## [3.0.0] - 2026-03-01
 
-### 🧬 Sistema PGA (Prompt Genómico Autoevolutivo)
+### Sistema PGA (Prompt Genomico Autoevolutivo)
 
-#### Añadido
-- **PGA Core** - Sistema de evolución genómica:
+#### Agregado
+
+- **PGA Core** - Sistema de evolucion genomica:
   - GenomeV2 con 3 cromosomas (C0, C1, C2)
   - GenomeKernel para integridad de C0
-  - FitnessTracker con métricas 6D
+  - FitnessTracker con metricas 6D
   - MutationOperator con estrategias LLM
   - GeneRegistry para genes compartidos
 
 - **Memoria por capas** (LayeredMemory)
-- **Evaluador híbrido** (heurístico + LLM)
-- **Integración no invasiva** con GenomaAgentPGABridge
+- **Evaluador hibrido** (heuristico + LLM)
+- **Integracion no invasiva** con GenomaAgentPGABridge
 - **Hooks modulares** para agentes existentes
 - **API simplificada** (PGAAPI)
 
@@ -76,21 +52,21 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 ## [2.0.0] - 2026-02-15
 
-### Rebranding y Mejoras
+### Gateway Multi-Canal
 
-#### Añadido
-- Rebranding de OpenClaw a Genoma
-- 42+ extensiones
+#### Agregado
+
+- 42+ extensiones de mensajeria
 - Browser automation con Playwright
-- Múltiples canales (Telegram, WhatsApp, Discord, Slack)
+- Multiples canales (Telegram, WhatsApp, Discord, Slack)
+- Soporte multi-proveedor IA
 
 ---
 
 ## [1.0.0] - 2026-01-01
 
-### Versión Inicial
+### Version Inicial
 
-- Base del proyecto (fork de OpenClaw)
 - Gateway unificado
 - Sistema de extensiones
 - Soporte multi-proveedor IA

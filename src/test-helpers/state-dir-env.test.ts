@@ -16,13 +16,13 @@ type EnvSnapshot = {
 function snapshotCurrentStateDirVars(): EnvSnapshot {
   return {
     genoma: process.env.GENOMA_STATE_DIR,
-    legacy: process.env.CLAWDBOT_STATE_DIR,
+    legacy: process.env.GENOMA_STATE_DIR,
   };
 }
 
 function expectStateDirVars(snapshot: EnvSnapshot) {
   expect(process.env.GENOMA_STATE_DIR).toBe(snapshot.genoma);
-  expect(process.env.CLAWDBOT_STATE_DIR).toBe(snapshot.legacy);
+  expect(process.env.GENOMA_STATE_DIR).toBe(snapshot.legacy);
 }
 
 async function expectPathMissing(filePath: string) {
@@ -46,7 +46,7 @@ describe("state-dir-env helpers", () => {
 
     setStateDirEnv("/tmp/genoma-state-dir-test");
     expect(process.env.GENOMA_STATE_DIR).toBe("/tmp/genoma-state-dir-test");
-    expect(process.env.CLAWDBOT_STATE_DIR).toBeUndefined();
+    expect(process.env.GENOMA_STATE_DIR).toBeUndefined();
 
     restoreStateDirEnv(snapshot);
     expectStateDirVars(prev);
@@ -61,7 +61,7 @@ describe("state-dir-env helpers", () => {
       capturedTempRoot = tempRoot;
       capturedStateDir = stateDir;
       expect(process.env.GENOMA_STATE_DIR).toBe(stateDir);
-      expect(process.env.CLAWDBOT_STATE_DIR).toBeUndefined();
+      expect(process.env.GENOMA_STATE_DIR).toBeUndefined();
       await fs.writeFile(path.join(stateDir, "probe.txt"), "ok", "utf8");
     });
 
@@ -87,7 +87,7 @@ describe("state-dir-env helpers", () => {
   it("withStateDirEnv restores both env vars when legacy var was previously set", async () => {
     const testSnapshot = snapshotStateDirEnv();
     process.env.GENOMA_STATE_DIR = "/tmp/original-genoma";
-    process.env.CLAWDBOT_STATE_DIR = "/tmp/original-legacy";
+    process.env.GENOMA_STATE_DIR = "/tmp/original-legacy";
     const prev = snapshotCurrentStateDirVars();
 
     let capturedTempRoot = "";
@@ -97,7 +97,7 @@ describe("state-dir-env helpers", () => {
         capturedTempRoot = tempRoot;
         capturedStateDir = stateDir;
         expect(process.env.GENOMA_STATE_DIR).toBe(stateDir);
-        expect(process.env.CLAWDBOT_STATE_DIR).toBeUndefined();
+        expect(process.env.GENOMA_STATE_DIR).toBeUndefined();
       });
 
       await expectStateDirEnvRestored({ prev, capturedStateDir, capturedTempRoot });

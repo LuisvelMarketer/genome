@@ -32,7 +32,7 @@ case "$AUTH_STATUS" in
         "$SCRIPT_DIR/claude-auth-status.sh" full
         exit 0
         ;;
-    CLAUDE_EXPIRING|GENOMA_EXPIRING|CLAWDBOT_EXPIRING)
+    CLAUDE_EXPIRING|GENOMA_EXPIRING|GENOMA_EXPIRING)
         echo -e "${YELLOW}Auth is expiring soon.${NC}"
         echo ""
         ;;

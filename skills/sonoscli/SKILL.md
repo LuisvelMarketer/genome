@@ -13,7 +13,7 @@ metadata:
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/sonoscli/cmd/sonos@latest",
+              "module": "github.com/LuisvelMarketer/sonoscli/cmd/sonos@latest",
               "bins": ["sonos"],
               "label": "Install sonoscli (go)",
             },

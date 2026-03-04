@@ -21,7 +21,7 @@ describe("config discord", () => {
             enabled: true,
             dm: {
               enabled: true,
-              allowFrom: ["steipete"],
+              allowFrom: ["LuisvelMarketer"],
               groupEnabled: true,
               groupChannels: ["genoma-dm"],
             },
@@ -34,7 +34,7 @@ describe("config discord", () => {
               "123": {
                 slug: "friends-of-genoma",
                 requireMention: false,
-                users: ["steipete"],
+                users: ["LuisvelMarketer"],
                 channels: {
                   general: { allow: true },
                 },

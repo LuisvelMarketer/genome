@@ -21,7 +21,7 @@ x-i18n:
 
 - Skills 系统：[Skills](/tools/skills)
 - Skills 配置：[Skills 配置](/tools/skills-config)
-- ClawHub 安装：[ClawHub](/tools/clawhub)
+- Genome 安装：[Genome](/tools/genome)
 
 ## 命令
 

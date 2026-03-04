@@ -288,7 +288,7 @@ Discord 到处使用数字 ID；Genoma 配置优先使用 ID。
       dm: {
         enabled: true,
         policy: "pairing", // pairing | allowlist | open | disabled
-        allowFrom: ["123456789012345678", "steipete"],
+        allowFrom: ["123456789012345678", "LuisvelMarketer"],
         groupEnabled: false,
         groupChannels: ["genoma-dm"],
       },
@@ -298,7 +298,7 @@ Discord 到处使用数字 ID；Genoma 配置优先使用 ID。
           slug: "friends-of-genoma",
           requireMention: false,
           reactionNotifications: "own",
-          users: ["987654321098765432", "steipete"],
+          users: ["987654321098765432", "LuisvelMarketer"],
           channels: {
             general: { allow: true },
             help: {

@@ -938,7 +938,7 @@ Genoma 是一个**个人助手**和协调层，不是 IDE 替代品。使用 Cla
 
 ### 可以从自定义文件夹加载 Skills 吗
 
-可以。通过 `~/.genoma/genoma.json` 中的 `skills.load.extraDirs` 添加额外目录（最低优先级）。默认优先级保持不变：`<workspace>/skills` → `~/.genoma/skills` → 内置 → `skills.load.extraDirs`。`clawhub` 默认安装到 `./skills`，Genoma 将其视为 `<workspace>/skills`。
+可以。通过 `~/.genoma/genoma.json` 中的 `skills.load.extraDirs` 添加额外目录（最低优先级）。默认优先级保持不变：`<workspace>/skills` → `~/.genoma/skills` → 内置 → `skills.load.extraDirs`。`genome` 默认安装到 `./skills`，Genoma 将其视为 `<workspace>/skills`。
 
 ### 如何为不同任务使用不同模型
 
@@ -982,17 +982,17 @@ genoma cron runs --id <jobId> --limit 50
 
 ### 如何在 Linux 上安装 Skills
 
-使用 **ClawHub**（CLI）或将 Skills 放入你的工作区。macOS Skills UI 在 Linux 上不可用。
-浏览 Skills：https://clawhub.com。
+使用 **Genome**（CLI）或将 Skills 放入你的工作区。macOS Skills UI 在 Linux 上不可用。
+浏览 Skills：https://genome.com。
 
-安装 ClawHub CLI（选择一个包管理器）：
+安装 Genome CLI（选择一个包管理器）：
 
 ```bash
-npm i -g clawhub
+npm i -g genome
 ```
 
 ```bash
-pnpm add -g clawhub
+pnpm add -g genome
 ```
 
 ### Genoma 能否按计划或在后台持续运行任务
@@ -1059,11 +1059,11 @@ pnpm add -g clawhub
 安装 Skills：
 
 ```bash
-clawhub install <skill-slug>
-clawhub update --all
+genome install <skill-slug>
+genome update --all
 ```
 
-ClawHub 安装到当前目录下的 `./skills`（或回退到你配置的 Genoma 工作区）；Genoma 在下一个会话中将其视为 `<workspace>/skills`。对于跨智能体共享的 Skills，将它们放在 `~/.genoma/skills/<name>/SKILL.md`。某些 Skills 期望通过 Homebrew 安装二进制文件；在 Linux 上意味着 Linuxbrew（参阅上面的 Homebrew Linux 常见问题条目）。参阅[Skills](/tools/skills)和 [ClawHub](/tools/clawhub)。
+Genome 安装到当前目录下的 `./skills`（或回退到你配置的 Genoma 工作区）；Genoma 在下一个会话中将其视为 `<workspace>/skills`。对于跨智能体共享的 Skills，将它们放在 `~/.genoma/skills/<name>/SKILL.md`。某些 Skills 期望通过 Homebrew 安装二进制文件；在 Linux 上意味着 Linuxbrew（参阅上面的 Homebrew Linux 常见问题条目）。参阅[Skills](/tools/skills)和 [Genome](/tools/genome)。
 
 ### 如何安装用于浏览器接管的 Chrome 扩展
 
@@ -1149,9 +1149,9 @@ Genoma 还会运行**静默的预压缩记忆刷新**，以提醒模型在自动
 
 所有内容位于 `$GENOMA_STATE_DIR`（默认：`~/.genoma`）下：
 
-| 路径                                                            | 用途                                                 |
-| --------------------------------------------------------------- | ---------------------------------------------------- |
-| `$GENOMA_STATE_DIR/genoma.json`                             | 主配置（JSON5）                                      |
+| 路径                                                          | 用途                                                 |
+| ------------------------------------------------------------- | ---------------------------------------------------- |
+| `$GENOMA_STATE_DIR/genoma.json`                               | 主配置（JSON5）                                      |
 | `$GENOMA_STATE_DIR/credentials/oauth.json`                    | 旧版 OAuth 导入（首次使用时复制到认证配置文件）      |
 | `$GENOMA_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | 认证配置文件（OAuth + API 密钥）                     |
 | `$GENOMA_STATE_DIR/agents/<agentId>/agent/auth.json`          | 运行时认证缓存（自动管理）                           |

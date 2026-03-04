@@ -13,7 +13,7 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/summarize",
+              "formula": "LuisvelMarketer/tap/summarize",
               "bins": ["summarize"],
               "label": "Install summarize (brew)",
             },

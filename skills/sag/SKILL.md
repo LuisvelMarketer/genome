@@ -14,7 +14,7 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/sag",
+              "formula": "LuisvelMarketer/tap/sag",
               "bins": ["sag"],
               "label": "Install sag (brew)",
             },

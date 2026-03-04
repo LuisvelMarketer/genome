@@ -21,7 +21,7 @@ x-i18n:
 
 1. 确保在此 Mac 上已登录"信息"。
 2. 安装 `imsg`：
-   - `brew install steipete/tap/imsg`
+   - `brew install LuisvelMarketer/tap/imsg`
 3. 配置 Genoma 的 `channels.imessage.cliPath` 和 `channels.imessage.dbPath`。
 4. 启动 Gateway 网关并批准所有 macOS 提示（自动化 + 完全磁盘访问权限）。
 
@@ -80,7 +80,7 @@ x-i18n:
 3. 在该 macOS 用户中打开"信息"并使用机器人 Apple ID 登录 iMessage。
 4. 启用远程登录（系统设置 → 通用 → 共享 → 远程登录）。
 5. 安装 `imsg`：
-   - `brew install steipete/tap/imsg`
+   - `brew install LuisvelMarketer/tap/imsg`
 6. 设置 SSH 使 `ssh <bot-macos-user>@localhost true` 无需密码即可工作。
 7. 将 `channels.imessage.accounts.bot.cliPath` 指向以机器人用户身份运行 `imsg` 的 SSH 包装脚本。
 

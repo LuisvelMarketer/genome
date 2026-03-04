@@ -6,7 +6,7 @@
 termux-toast "Syncing Genoma auth..."
 
 # Run sync on l36 server
-SERVER="${GENOMA_SERVER:-${CLAWDBOT_SERVER:-l36}}"
+SERVER="${GENOMA_SERVER:-${GENOMA_SERVER:-l36}}"
 RESULT=$(ssh "$SERVER" '/home/admin/genoma/scripts/sync-claude-code-auth.sh' 2>&1)
 EXIT_CODE=$?
 

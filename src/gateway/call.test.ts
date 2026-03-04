@@ -95,7 +95,7 @@ describe("callGateway url resolution", () => {
     "GENOMA_ALLOW_INSECURE_PRIVATE_WS",
     "GENOMA_GATEWAY_URL",
     "GENOMA_GATEWAY_TOKEN",
-    "CLAWDBOT_GATEWAY_TOKEN",
+    "GENOMA_GATEWAY_TOKEN",
   ]);
 
   beforeEach(() => {
@@ -528,7 +528,7 @@ describe("callGateway url override auth requirements", () => {
       "GENOMA_GATEWAY_TOKEN",
       "GENOMA_GATEWAY_PASSWORD",
       "GENOMA_GATEWAY_URL",
-      "CLAWDBOT_GATEWAY_URL",
+      "GENOMA_GATEWAY_URL",
     ]);
     resetGatewayCallMocks();
     setGatewayNetworkDefaults(18789);

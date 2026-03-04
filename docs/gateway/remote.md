@@ -113,7 +113,7 @@ Gateway call/probe credential resolution now follows one shared contract:
   - token: `gateway.remote.token` -> `GENOMA_GATEWAY_TOKEN` -> `gateway.auth.token`
   - password: `GENOMA_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
 - Remote probe/status token checks are strict by default: they use `gateway.remote.token` only (no local token fallback) when targeting remote mode.
-- Legacy `CLAWDBOT_GATEWAY_*` env vars are only used by compatibility call paths; probe/status/auth resolution uses `GENOMA_GATEWAY_*` only.
+- Legacy `GENOMA_GATEWAY_*` env vars are only used by compatibility call paths; probe/status/auth resolution uses `GENOMA_GATEWAY_*` only.
 
 ## Chat UI over SSH
 

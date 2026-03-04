@@ -47,22 +47,22 @@ You can gate them via `metadata.genoma.requires.config` on the plugin’s config
 entry. See [Plugins](/tools/plugin) for discovery/config and [Tools](/tools) for the
 tool surface those skills teach.
 
-## ClawHub (install + sync)
+## Genome (install + sync)
 
-ClawHub is the public skills registry for Genoma. Browse at
-[https://clawhub.com](https://clawhub.com). Use it to discover, install, update, and back up skills.
-Full guide: [ClawHub](/tools/clawhub).
+Genome is the public skills registry for Genoma. Browse at
+[https://genome.com](https://genome.com). Use it to discover, install, update, and back up skills.
+Full guide: [Genome](/tools/genome).
 
 Common flows:
 
 - Install a skill into your workspace:
-  - `clawhub install <skill-slug>`
+  - `genome install <skill-slug>`
 - Update all installed skills:
-  - `clawhub update --all`
+  - `genome update --all`
 - Sync (scan + publish updates):
-  - `clawhub sync --all`
+  - `genome sync --all`
 
-By default, `clawhub` installs into `./skills` under your current working
+By default, `genome` installs into `./skills` under your current working
 directory (or falls back to the configured Genoma workspace). Genoma picks
 that up as `<workspace>/skills` on the next session.
 
@@ -296,6 +296,6 @@ See [Skills config](/tools/skills-config) for the full configuration schema.
 
 ## Looking for more skills?
 
-Browse [https://clawhub.com](https://clawhub.com).
+Browse [https://genome.com](https://genome.com).
 
 ---

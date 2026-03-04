@@ -13,14 +13,14 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/gifgrep",
+              "formula": "LuisvelMarketer/tap/gifgrep",
               "bins": ["gifgrep"],
               "label": "Install gifgrep (brew)",
             },
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/gifgrep/cmd/gifgrep@latest",
+              "module": "github.com/LuisvelMarketer/gifgrep/cmd/gifgrep@latest",
               "bins": ["gifgrep"],
               "label": "Install gifgrep (go)",
             },

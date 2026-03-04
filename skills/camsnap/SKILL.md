@@ -13,7 +13,7 @@ metadata:
             {
               "id": "brew",
               "kind": "brew",
-              "formula": "steipete/tap/camsnap",
+              "formula": "LuisvelMarketer/tap/camsnap",
               "bins": ["camsnap"],
               "label": "Install camsnap (brew)",
             },

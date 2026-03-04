@@ -346,19 +346,18 @@ describe("buildNodeServiceEnvironment", () => {
     expect(env.GENOMA_GATEWAY_TOKEN).toBe("node-token");
   });
 
-  it("maps legacy CLAWDBOT_GATEWAY_TOKEN to GENOMA_GATEWAY_TOKEN for node services", () => {
+  it("maps legacy GENOMA_GATEWAY_TOKEN to GENOMA_GATEWAY_TOKEN for node services", () => {
     const env = buildNodeServiceEnvironment({
-      env: { HOME: "/home/user", CLAWDBOT_GATEWAY_TOKEN: " legacy-token " },
+      env: { HOME: "/home/user", GENOMA_GATEWAY_TOKEN: " legacy-token " },
     });
     expect(env.GENOMA_GATEWAY_TOKEN).toBe("legacy-token");
   });
 
-  it("prefers GENOMA_GATEWAY_TOKEN over legacy CLAWDBOT_GATEWAY_TOKEN", () => {
+  it("prefers GENOMA_GATEWAY_TOKEN over legacy GENOMA_GATEWAY_TOKEN", () => {
     const env = buildNodeServiceEnvironment({
       env: {
         HOME: "/home/user",
         GENOMA_GATEWAY_TOKEN: "genoma-token",
-        CLAWDBOT_GATEWAY_TOKEN: "legacy-token",
       },
     });
     expect(env.GENOMA_GATEWAY_TOKEN).toBe("genoma-token");
@@ -369,7 +368,6 @@ describe("buildNodeServiceEnvironment", () => {
       env: {
         HOME: "/home/user",
         GENOMA_GATEWAY_TOKEN: "   ",
-        CLAWDBOT_GATEWAY_TOKEN: " ",
       },
     });
     expect(env.GENOMA_GATEWAY_TOKEN).toBeUndefined();

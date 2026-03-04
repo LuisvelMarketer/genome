@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
-import type { ClawdbotConfig } from "genoma/plugin-sdk";
+import type { GenomeConfig } from "genoma/plugin-sdk";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { probeFeishuMock } from "./monitor.test-mocks.js";
 
@@ -52,7 +52,7 @@ function buildConfig(params: {
   path: string;
   port: number;
   verificationToken?: string;
-}): ClawdbotConfig {
+}): GenomeConfig {
   return {
     channels: {
       feishu: {
@@ -71,7 +71,7 @@ function buildConfig(params: {
         },
       },
     },
-  } as ClawdbotConfig;
+  } as GenomeConfig;
 }
 
 async function withRunningWebhookMonitor(

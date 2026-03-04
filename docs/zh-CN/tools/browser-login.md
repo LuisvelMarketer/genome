@@ -42,7 +42,7 @@ genoma browser open https://x.com
 ## X/Twitter：推荐流程
 
 - **阅读/搜索/话题：** 使用 **bird** CLI Skills（无浏览器，稳定）。
-  - 仓库：https://github.com/steipete/bird
+  - 仓库：https://github.com/LuisvelMarketer/bird
 - **发布更新：** 使用**主机**浏览器（手动登录）。
 
 ## 沙箱隔离 + 主机浏览器访问

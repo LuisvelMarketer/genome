@@ -1,26 +1,27 @@
 /**
  * @fileoverview Integración principal de PGA con el sistema de agentes de Genoma
- * 
+ *
  * Este módulo proporciona la integración no-invasiva del sistema PGA
  * con los agentes existentes de Genoma, permitiendo evolución genómica
  * sin modificar el código base existente.
  */
 
-import { EventEmitter } from 'events';
-import type { GenomeV2, FitnessVector, MutationRecord } from '../types/index.js';
-import type { StorageAdapter } from '../interfaces/StorageAdapter.js';
-import type { LLMAdapter } from '../interfaces/LLMAdapter.js';
-import { GenomeKernel } from '../core/GenomeKernel.js';
-import { GenomeManager } from '../core/GenomeManager.js';
-import { FitnessTracker } from '../core/FitnessTracker.js';
-import { PromptAssembler } from '../core/PromptAssembler.js';
-import { GeneRegistry } from '../core/GeneRegistry.js';
-import { LayeredMemory } from '../memory/LayeredMemory.js';
-import { MutationOperator } from '../evolution/MutationOperator.js';
-import { Evaluator } from '../evaluation/Evaluator.js';
-import { PGALogger } from './PGALogger.js';
-import { PGARollbackManager } from './PGARollbackManager.js';
-import { PGAMetricsCollector } from './PGAMetricsCollector.js';
+import { EventEmitter } from "events";
+import { FitnessTracker } from "../core/FitnessTracker.js";
+import { GeneRegistry } from "../core/GeneRegistry.js";
+import { GenomeKernel } from "../core/GenomeKernel.js";
+import { GenomeManager } from "../core/GenomeManager.js";
+import { PromptAssembler } from "../core/PromptAssembler.js";
+import { Evaluator } from "../evaluation/Evaluator.js";
+import { MutationOperator, type MutationStrategy } from "../evolution/MutationOperator.js";
+import type { LLMAdapter } from "../interfaces/LLMAdapter.js";
+import type { StorageAdapter } from "../interfaces/StorageAdapter.js";
+import { LayeredMemory } from "../memory/LayeredMemory.js";
+import type { GenomeV2, FitnessVector, MutationRecord } from "../types/index.js";
+import { estimateTokenCount } from "../utils/tokens.js";
+import { PGALogger } from "./PGALogger.js";
+import { PGAMetricsCollector } from "./PGAMetricsCollector.js";
+import { PGARollbackManager } from "./PGARollbackManager.js";
 
 // ============================================================================
 // Types
@@ -77,16 +78,16 @@ export interface FitnessScore {
   adaptability: number;
 }
 
-export type PGAEventType = 
-  | 'genome_loaded'
-  | 'fitness_recorded'
-  | 'mutation_triggered'
-  | 'mutation_applied'
-  | 'rollback_initiated'
-  | 'rollback_completed'
-  | 'integrity_violation'
-  | 'gene_activated'
-  | 'gene_deactivated';
+export type PGAEventType =
+  | "genome_loaded"
+  | "fitness_recorded"
+  | "mutation_triggered"
+  | "mutation_applied"
+  | "rollback_initiated"
+  | "rollback_completed"
+  | "integrity_violation"
+  | "gene_activated"
+  | "gene_deactivated";
 
 export interface PGAEvent {
   type: PGAEventType;
@@ -102,7 +103,7 @@ export interface PGAEvent {
 
 export const DEFAULT_INTEGRATION_CONFIG: PGAAgentIntegrationConfig = {
   enabled: true,
-  agentId: 'default',
+  agentId: "default",
   mutationInterval: 50,
   fitnessThreshold: 0.6,
   autoRollback: true,
@@ -118,15 +119,15 @@ export const DEFAULT_INTEGRATION_CONFIG: PGAAgentIntegrationConfig = {
 /**
  * AgentIntegration provides the bridge between Genoma's agent system
  * and the PGA genomic evolution system.
- * 
+ *
  * Usage:
  * ```typescript
  * const integration = new AgentIntegration(storageAdapter, llmAdapter, config);
  * await integration.initialize();
- * 
+ *
  * // Before agent execution
  * const evolvedPrompt = await integration.assemblePromptForAgent(context);
- * 
+ *
  * // After agent execution
  * await integration.recordExecution(context, result, feedback);
  * ```
@@ -135,7 +136,7 @@ export class AgentIntegration extends EventEmitter {
   private readonly storage: StorageAdapter;
   private readonly llm: LLMAdapter;
   private readonly config: PGAAgentIntegrationConfig;
-  
+
   // Core PGA components
   private kernel: GenomeKernel | null = null;
   private manager: GenomeManager;
@@ -145,12 +146,12 @@ export class AgentIntegration extends EventEmitter {
   private memory: LayeredMemory;
   private mutator: MutationOperator;
   private evaluator: Evaluator;
-  
+
   // Integration-specific components
   private logger: PGALogger;
   private rollbackManager: PGARollbackManager;
   private metricsCollector: PGAMetricsCollector;
-  
+
   // State
   private genome: GenomeV2 | null = null;
   private interactionCount = 0;
@@ -160,13 +161,13 @@ export class AgentIntegration extends EventEmitter {
   constructor(
     storage: StorageAdapter,
     llm: LLMAdapter,
-    config: Partial<PGAAgentIntegrationConfig> = {}
+    config: Partial<PGAAgentIntegrationConfig> = {},
   ) {
     super();
     this.storage = storage;
     this.llm = llm;
     this.config = { ...DEFAULT_INTEGRATION_CONFIG, ...config };
-    
+
     // Initialize components
     this.manager = new GenomeManager(storage);
     this.tracker = new FitnessTracker(storage);
@@ -175,13 +176,13 @@ export class AgentIntegration extends EventEmitter {
     this.memory = new LayeredMemory(storage);
     this.mutator = new MutationOperator(llm);
     this.evaluator = new Evaluator(llm);
-    
+
     // Integration components
     this.logger = new PGALogger(this.config.verboseLogging);
     this.rollbackManager = new PGARollbackManager(
       storage,
       this.config.maxSnapshots,
-      this.config.rollbackThreshold
+      this.config.rollbackThreshold,
     );
     this.metricsCollector = new PGAMetricsCollector();
   }
@@ -195,74 +196,147 @@ export class AgentIntegration extends EventEmitter {
    */
   async initialize(): Promise<void> {
     if (!this.config.enabled) {
-      this.logger.info('PGA disabled for agent', { agentId: this.config.agentId });
+      this.logger.info("PGA disabled for agent", { agentId: this.config.agentId });
       return;
     }
 
     try {
       // Load or create genome
       this.genome = await this.loadOrCreateGenome();
-      
+
       // Initialize kernel with genome
       this.kernel = new GenomeKernel(this.genome);
-      
+
       // Setup kernel callbacks
       this.setupKernelCallbacks();
-      
+
       // Verify genome integrity
       await this.verifyIntegrity();
-      
+
       // Load previous fitness if available
       this.lastFitness = this.genome.fitness;
-      
+
       this.isInitialized = true;
-      
-      this.emitEvent('genome_loaded', {
+
+      // Eager compression: compress token-heavy genes before first execution
+      await this.eagerCompressGenes();
+
+      this.emitEvent("genome_loaded", {
         genomeId: this.genome.id,
         version: this.genome.version,
       });
-      
-      this.logger.info('PGA integration initialized', {
+
+      this.logger.info("PGA integration initialized", {
         agentId: this.config.agentId,
         genomeId: this.genome.id,
       });
     } catch (error) {
-      this.logger.error('Failed to initialize PGA integration', { error });
+      this.logger.error("Failed to initialize PGA integration", { error });
       throw error;
     }
   }
 
   private async loadOrCreateGenome(): Promise<GenomeV2> {
     const existingGenomes = await this.manager.listGenomes();
-    const agentGenome = existingGenomes.find(
-      g => g.metadata?.agentId === this.config.agentId
-    );
-    
+    const agentGenome = existingGenomes.find((g) => g.metadata?.agentId === this.config.agentId);
+
     if (agentGenome) {
       return this.manager.loadGenome(agentGenome.id);
     }
-    
-    return this.manager.createGenome(
-      `Genome for ${this.config.agentId}`,
-      { agentId: this.config.agentId }
-    );
+
+    return this.manager.createGenome(`Genome for ${this.config.agentId}`, {
+      agentId: this.config.agentId,
+    });
   }
 
   private setupKernelCallbacks(): void {
-    if (!this.kernel) return;
-    
+    if (!this.kernel) {
+      return;
+    }
+
     this.kernel.onViolation((event) => {
-      this.logger.warn('C0 integrity violation detected', event);
-      this.emitEvent('integrity_violation', event);
+      this.logger.warn("C0 integrity violation detected", event);
+      this.emitEvent("integrity_violation", event);
     });
-    
+
     this.kernel.onQuarantine((event) => {
-      this.logger.error('Genome quarantined', event);
+      this.logger.error("Genome quarantined", event);
       // Attempt automatic rollback
       if (this.config.autoRollback) {
-        this.triggerRollback('integrity_violation');
+        void this.triggerRollback("integrity_violation");
       }
     });
+  }
+
+  // ==========================================================================
+  // Eager Compression
+  // ==========================================================================
+
+  /**
+   * Compress token-heavy genes at initialization instead of waiting
+   * for mutation cycles. This ensures reduced overhead from the first execution.
+   * Only compresses genes above compressionTokenThreshold (default 100 tokens).
+   * Runs once per initialization — compressed genes are persisted in the genome.
+   */
+  private async eagerCompressGenes(): Promise<void> {
+    if (!this.genome || !this.llm) {
+      return;
+    }
+
+    const genes =
+      this.genome.chromosomes?.c1?.operations ??
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (this.genome as unknown as Record<string, any>).c1?.operativeGenes;
+    if (!genes || genes.length === 0) {
+      return;
+    }
+
+    const threshold = 100; // compressionTokenThreshold default
+    const candidatesForCompression = genes.filter(
+      (gene: import("../types/index.js").OperativeGene) => {
+        const tokens = gene.tokenCount || estimateTokenCount(gene.content);
+        return tokens > threshold;
+      },
+    );
+
+    if (candidatesForCompression.length === 0) {
+      return;
+    }
+
+    this.logger.info("Eager compression: found candidates", {
+      count: candidatesForCompression.length,
+    });
+
+    let compressed = 0;
+    for (const gene of candidatesForCompression) {
+      const result = await this.mutator.mutate(gene, { type: "compress", temperature: 0.3 });
+
+      if (result.success && result.mutatedGene) {
+        // Replace gene in-place in the genome
+        const geneIndex = genes.findIndex(
+          (g: import("../types/index.js").OperativeGene) => g.id === gene.id,
+        );
+        if (geneIndex >= 0) {
+          genes[geneIndex] = result.mutatedGene;
+          compressed++;
+          this.logger.info("Gene compressed", {
+            geneId: gene.id,
+            category: gene.category,
+            originalTokens: result.compressionMetrics?.originalTokens,
+            compressedTokens: result.compressionMetrics?.compressedTokens,
+            ratio: result.compressionMetrics?.ratio,
+          });
+        }
+      }
+    }
+
+    if (compressed > 0) {
+      this.emitEvent("mutation_applied", {
+        reason: "eager_compression",
+        genesCompressed: compressed,
+        totalCandidates: candidatesForCompression.length,
+      });
+    }
   }
 
   // ==========================================================================
@@ -275,7 +349,7 @@ export class AgentIntegration extends EventEmitter {
    */
   async assemblePromptForAgent(
     context: AgentExecutionContext,
-    basePrompt?: string
+    basePrompt?: string,
   ): Promise<string> {
     if (!this.config.enabled || !this.isInitialized || !this.genome) {
       return basePrompt ?? context.prompt;
@@ -284,34 +358,34 @@ export class AgentIntegration extends EventEmitter {
     try {
       // Verify integrity before assembly
       if (!this.kernel?.verifyC0Integrity()) {
-        this.logger.warn('C0 integrity check failed, using base prompt');
+        this.logger.warn("C0 integrity check failed, using base prompt");
         return basePrompt ?? context.prompt;
       }
 
       // Get evolved prompt
       const evolvedPrompt = this.assembler.assemble(this.genome);
-      
+
       // Get memory context for user
       const memoryContext = this.config.userId
         ? await this.memory.getMemoryPrompt(this.config.userId, this.genome.id)
-        : '';
-      
+        : "";
+
       // Combine with base prompt
       const finalPrompt = this.assembler.injectGenes(
         basePrompt ?? context.prompt,
         evolvedPrompt,
-        memoryContext
+        memoryContext,
       );
-      
-      this.logger.debug('Prompt assembled', {
+
+      this.logger.debug("Prompt assembled", {
         sessionId: context.sessionId,
         evolvedLength: evolvedPrompt.length,
         memoryLength: memoryContext.length,
       });
-      
+
       return finalPrompt;
     } catch (error) {
-      this.logger.error('Error assembling prompt', { error });
+      this.logger.error("Error assembling prompt", { error });
       return basePrompt ?? context.prompt;
     }
   }
@@ -327,7 +401,7 @@ export class AgentIntegration extends EventEmitter {
   async recordExecution(
     context: AgentExecutionContext,
     result: AgentExecutionResult,
-    userFeedback?: { rating?: number; comment?: string }
+    userFeedback?: { rating?: number; comment?: string },
   ): Promise<void> {
     if (!this.config.enabled || !this.isInitialized || !this.genome) {
       return;
@@ -336,10 +410,10 @@ export class AgentIntegration extends EventEmitter {
     try {
       // Calculate fitness from execution metrics
       const fitness = await this.calculateFitness(context, result, userFeedback);
-      
+
       // Record fitness
       await this.recordFitness(fitness);
-      
+
       // Record interaction
       await this.storage.recordInteraction({
         id: `int-${Date.now()}`,
@@ -356,7 +430,7 @@ export class AgentIntegration extends EventEmitter {
           toolsUsed: result.toolsUsed,
         },
       });
-      
+
       // Learn from interaction if user provides feedback
       if (userFeedback?.comment && this.config.userId) {
         await this.memory.learn(
@@ -364,60 +438,59 @@ export class AgentIntegration extends EventEmitter {
           this.genome.id,
           `User feedback: ${userFeedback.comment}`,
           {
-            category: 'user_feedback',
+            category: "user_feedback",
             confidence: 0.8,
-            source: 'explicit_feedback',
-          }
+            source: "explicit_feedback",
+          },
         );
       }
-      
+
       // Increment interaction count and check for mutation
       this.interactionCount++;
       await this.checkAndTriggerMutation(fitness);
-      
-      this.emitEvent('fitness_recorded', {
+
+      this.emitEvent("fitness_recorded", {
         fitness,
         interactionCount: this.interactionCount,
       });
-      
     } catch (error) {
-      this.logger.error('Error recording execution', { error });
+      this.logger.error("Error recording execution", { error });
     }
   }
 
   private async calculateFitness(
     context: AgentExecutionContext,
     result: AgentExecutionResult,
-    userFeedback?: { rating?: number; comment?: string }
+    userFeedback?: { rating?: number; comment?: string },
   ): Promise<FitnessVector> {
     // Use evaluator for heuristic evaluation
     const heuristicEval = this.evaluator.evaluateHeuristic(
       context.prompt,
       result.response,
       result.latencyMs,
-      result.tokensUsed.output
+      result.tokensUsed.output,
     );
-    
+
     // Calculate speed score (inversely proportional to latency)
     const maxLatency = 30000; // 30 seconds max
-    const speedScore = Math.max(0, 1 - (result.latencyMs / maxLatency));
-    
+    const speedScore = Math.max(0, 1 - result.latencyMs / maxLatency);
+
     // Calculate cost score (inversely proportional to tokens)
     const maxTokens = 10000;
     const totalTokens = result.tokensUsed.input + result.tokensUsed.output;
-    const costScore = Math.max(0, 1 - (totalTokens / maxTokens));
-    
+    const costScore = Math.max(0, 1 - totalTokens / maxTokens);
+
     // Safety score (no errors = safe)
     const safetyScore = result.error ? 0.5 : 1.0;
-    
+
     // User satisfaction from feedback
     const userSatisfaction = userFeedback?.rating
       ? userFeedback.rating / 5.0
       : heuristicEval.fitness.userSatisfaction;
-    
+
     // Adaptability (based on tool usage variety)
     const adaptability = Math.min(1, result.toolsUsed.length * 0.2);
-    
+
     return {
       accuracy: heuristicEval.fitness.accuracy,
       speed: speedScore,
@@ -429,17 +502,16 @@ export class AgentIntegration extends EventEmitter {
   }
 
   private async recordFitness(fitness: FitnessVector): Promise<void> {
-    if (!this.genome) return;
-    
+    if (!this.genome) {
+      return;
+    }
+
     // Update genome fitness (using EMA)
-    this.genome.fitness = this.tracker.updateGenomeFitness(
-      this.genome,
-      fitness
-    );
-    
+    this.genome.fitness = this.tracker.updateGenomeFitness(this.genome, fitness);
+
     // Save updated genome
     await this.manager.updateGenome(this.genome);
-    
+
     // Collect metrics
     this.metricsCollector.recordFitness(fitness);
   }
@@ -453,37 +525,37 @@ export class AgentIntegration extends EventEmitter {
     if (this.interactionCount < this.config.mutationInterval) {
       return;
     }
-    
+
     // Calculate average fitness
     const avgFitness = this.calculateAverageFitness(currentFitness);
-    
+
     // Check if fitness is below threshold
     if (avgFitness < this.config.fitnessThreshold) {
-      this.logger.info('Fitness below threshold, triggering mutation', {
+      this.logger.info("Fitness below threshold, triggering mutation", {
         avgFitness,
         threshold: this.config.fitnessThreshold,
       });
       await this.triggerMutation();
     }
-    
+
     // Check for rollback if fitness dropped significantly
     if (this.lastFitness && this.config.autoRollback) {
       const lastAvg = this.calculateAverageFitness(this.lastFitness);
       const drop = lastAvg - avgFitness;
-      
+
       if (drop > this.config.rollbackThreshold) {
-        this.logger.warn('Significant fitness drop detected', {
+        this.logger.warn("Significant fitness drop detected", {
           previousFitness: lastAvg,
           currentFitness: avgFitness,
           drop,
         });
-        await this.triggerRollback('fitness_drop');
+        await this.triggerRollback("fitness_drop");
       }
     }
-    
+
     // Update last fitness
     this.lastFitness = currentFitness;
-    
+
     // Reset interaction count
     this.interactionCount = 0;
   }
@@ -501,80 +573,96 @@ export class AgentIntegration extends EventEmitter {
   }
 
   /**
+   * Select mutation strategy based on gene fitness and token count.
+   * Functional but token-heavy genes → compress (preserve capabilities, reduce tokens).
+   * Low-performing genes → rewrite (improve quality).
+   */
+  private selectMutationStrategy(
+    gene: import("../types/index.js").OperativeGene,
+  ): MutationStrategy {
+    const tokenCount = gene.tokenCount || estimateTokenCount(gene.content);
+    const functionalFitness =
+      (gene.fitness.accuracy + gene.fitness.safety + gene.fitness.userSatisfaction) / 3;
+
+    if (functionalFitness >= 0.7 && tokenCount > 100) {
+      return { type: "compress", temperature: 0.3 };
+    }
+
+    return { type: "llm_rewrite", temperature: 0.7 };
+  }
+
+  /**
    * Trigger genome mutation
    */
   async triggerMutation(): Promise<void> {
-    if (!this.genome || !this.kernel) return;
-    
+    if (!this.genome || !this.kernel) {
+      return;
+    }
+
     try {
-      this.emitEvent('mutation_triggered', { reason: 'scheduled' });
-      
+      this.emitEvent("mutation_triggered", { reason: "scheduled" });
+
       // Create snapshot before mutation
       await this.rollbackManager.createSnapshot(this.genome);
-      
+
       // Get lowest performing genes
-      const lowPerformingGenes = this.tracker.getLowestPerformingGenes(
-        this.genome,
-        3
-      );
-      
+      const lowPerformingGenes = this.tracker.getLowestPerformingGenes(this.genome, 3);
+
       const mutations: MutationRecord[] = [];
-      
+
       for (const gene of lowPerformingGenes) {
-        // Mutate gene
-        const result = await this.mutator.mutate(gene, 'llm_rewrite');
-        
+        // Select strategy: compress functional genes, rewrite weak ones
+        const strategy = this.selectMutationStrategy(gene);
+        const result = await this.mutator.mutate(gene, strategy);
+
         if (result.success && result.mutatedGene) {
           // Replace gene in genome
-          const geneIndex = this.genome.c1.operativeGenes.findIndex(
-            g => g.id === gene.id
-          );
-          
+          const geneIndex = this.genome.c1.operativeGenes.findIndex((g) => g.id === gene.id);
+
           if (geneIndex >= 0) {
             this.genome.c1.operativeGenes[geneIndex] = result.mutatedGene;
-            
+
             mutations.push({
               id: `mut-${Date.now()}-${gene.id}`,
               timestamp: Date.now(),
               geneId: gene.id,
-              chromosome: 'c1',
-              operation: 'replace',
+              chromosome: "c1",
+              operation: "replace",
               before: gene.content,
               after: result.mutatedGene.content,
-              reason: 'low_fitness',
+              reason: "low_fitness",
               fitness: gene.fitness,
             });
           }
         }
       }
-      
+
       // Update genome version
       this.genome.version++;
-      
+
       // Save mutations
       for (const mutation of mutations) {
         await this.storage.logMutation(mutation);
       }
-      
+
       // Save updated genome
       await this.manager.updateGenome(this.genome);
-      
+
       // Reinitialize kernel with updated genome
       this.kernel = new GenomeKernel(this.genome);
       this.setupKernelCallbacks();
-      
-      this.emitEvent('mutation_applied', {
+
+      this.emitEvent("mutation_applied", {
         mutationCount: mutations.length,
         version: this.genome.version,
       });
-      
-      this.logger.info('Mutations applied', {
+
+      this.logger.info("Mutations applied", {
         mutationCount: mutations.length,
         version: this.genome.version,
       });
-      
     } catch (error) {
-      this.logger.error('Mutation failed', { error });
+      this.logger.error("Mutation failed", { error });
     }
   }
 
@@ -586,34 +674,36 @@ export class AgentIntegration extends EventEmitter {
    * Trigger rollback to previous genome version
    */
   private async triggerRollback(reason: string): Promise<void> {
-    if (!this.genome) return;
-    
+    if (!this.genome) {
+      return;
+    }
+
     try {
-      this.emitEvent('rollback_initiated', { reason });
-      
+      this.emitEvent("rollback_initiated", { reason });
+
       const previousSnapshot = await this.rollbackManager.rollback(this.genome.id);
-      
+
       if (previousSnapshot) {
         this.genome = previousSnapshot;
         this.kernel = new GenomeKernel(this.genome);
         this.setupKernelCallbacks();
-        
+
         await this.manager.updateGenome(this.genome);
-        
-        this.emitEvent('rollback_completed', {
+
+        this.emitEvent("rollback_completed", {
           version: this.genome.version,
           reason,
         });
-        
-        this.logger.info('Rollback completed', {
+
+        this.logger.info("Rollback completed", {
           version: this.genome.version,
           reason,
         });
       } else {
-        this.logger.warn('No snapshot available for rollback');
+        this.logger.warn("No snapshot available for rollback");
       }
     } catch (error) {
-      this.logger.error('Rollback failed', { error });
+      this.logger.error("Rollback failed", { error });
     }
   }
 
@@ -638,7 +728,7 @@ export class AgentIntegration extends EventEmitter {
   /**
    * Get metrics summary
    */
-  getMetrics(): ReturnType<PGAMetricsCollector['getSummary']> {
+  getMetrics(): ReturnType<PGAMetricsCollector["getSummary"]> {
     return this.metricsCollector.getSummary();
   }
 
@@ -647,7 +737,7 @@ export class AgentIntegration extends EventEmitter {
    */
   async forceEvolution(): Promise<void> {
     if (!this.config.enabled || !this.isInitialized) {
-      throw new Error('PGA not initialized');
+      throw new Error("PGA not initialized");
     }
     await this.triggerMutation();
   }
@@ -657,37 +747,35 @@ export class AgentIntegration extends EventEmitter {
    */
   async forceRollback(): Promise<void> {
     if (!this.config.enabled || !this.isInitialized) {
-      throw new Error('PGA not initialized');
+      throw new Error("PGA not initialized");
     }
-    await this.triggerRollback('manual');
+    await this.triggerRollback("manual");
   }
 
   /**
    * Record explicit user feedback
    */
-  async recordFeedback(
-    rating: number,
-    comment?: string
-  ): Promise<void> {
-    if (!this.config.enabled || !this.genome || !this.config.userId) return;
-    
+  async recordFeedback(rating: number, comment?: string): Promise<void> {
+    if (!this.config.enabled || !this.genome || !this.config.userId) {
+      return;
+    }
+
     await this.storage.saveFeedback({
       id: `fb-${Date.now()}`,
       genomeId: this.genome.id,
       userId: this.config.userId,
       timestamp: Date.now(),
-      type: 'explicit',
+      type: "explicit",
       rating,
       comment,
     });
-    
+
     if (comment) {
-      await this.memory.learn(
-        this.config.userId,
-        this.genome.id,
-        comment,
-        { category: 'user_preference', confidence: 0.9, source: 'explicit' }
-      );
+      await this.memory.learn(this.config.userId, this.genome.id, comment, {
+        category: "user_preference",
+        confidence: 0.9,
+        source: "explicit",
+      });
     }
   }
 
@@ -711,7 +799,7 @@ export class AgentIntegration extends EventEmitter {
       data,
     };
     this.emit(type, event);
-    this.emit('pga_event', event);
+    this.emit("pga_event", event);
   }
 
   // ==========================================================================
@@ -719,7 +807,9 @@ export class AgentIntegration extends EventEmitter {
   // ==========================================================================
 
   private async verifyIntegrity(): Promise<boolean> {
-    if (!this.kernel || !this.genome) return false;
+    if (!this.kernel || !this.genome) {
+      return false;
+    }
     return this.kernel.verifyC0Integrity();
   }
 }

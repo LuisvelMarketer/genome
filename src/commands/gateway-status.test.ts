@@ -197,7 +197,7 @@ describe("gateway-status command", () => {
 
   it("skips invalid ssh-auto discovery targets", async () => {
     const { runtime } = createRuntimeCapture();
-    await withEnvAsync({ USER: "steipete" }, async () => {
+    await withEnvAsync({ USER: "LuisvelMarketer" }, async () => {
       loadConfig.mockReturnValueOnce({
         gateway: {
           mode: "remote",
@@ -219,13 +219,13 @@ describe("gateway-status command", () => {
 
       expect(startSshPortForward).toHaveBeenCalledTimes(1);
       const call = startSshPortForward.mock.calls[0]?.[0] as { target: string };
-      expect(call.target).toBe("steipete@goodhost");
+      expect(call.target).toBe("LuisvelMarketer@goodhost");
     });
   });
 
   it("infers SSH target from gateway.remote.url and ssh config", async () => {
     const { runtime } = createRuntimeCapture();
-    await withEnvAsync({ USER: "steipete" }, async () => {
+    await withEnvAsync({ USER: "LuisvelMarketer" }, async () => {
       loadConfig.mockReturnValueOnce({
         gateway: {
           mode: "remote",
@@ -234,7 +234,7 @@ describe("gateway-status command", () => {
         },
       });
       resolveSshConfig.mockResolvedValueOnce({
-        user: "steipete",
+        user: "LuisvelMarketer",
         host: "peters-mac-studio-1.sheep-coho.ts.net",
         port: 2222,
         identityFiles: ["/tmp/id_ed25519"],
@@ -252,7 +252,7 @@ describe("gateway-status command", () => {
         target: string;
         identity?: string;
       };
-      expect(call.target).toBe("steipete@peters-mac-studio-1.sheep-coho.ts.net:2222");
+      expect(call.target).toBe("LuisvelMarketer@peters-mac-studio-1.sheep-coho.ts.net:2222");
       expect(call.identity).toBe("/tmp/id_ed25519");
     });
   });

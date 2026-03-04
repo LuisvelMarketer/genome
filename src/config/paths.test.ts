@@ -87,21 +87,21 @@ describe("state + config path candidates", () => {
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
     const expected = [
       path.join(resolvedHome, ".genoma", "genoma.json"),
-      path.join(resolvedHome, ".genoma", "clawdbot.json"),
+      path.join(resolvedHome, ".genoma", "genome.json"),
       path.join(resolvedHome, ".genoma", "moldbot.json"),
-      path.join(resolvedHome, ".genoma", "moltbot.json"),
-      path.join(resolvedHome, ".clawdbot", "genoma.json"),
-      path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
-      path.join(resolvedHome, ".clawdbot", "moldbot.json"),
-      path.join(resolvedHome, ".clawdbot", "moltbot.json"),
-      path.join(resolvedHome, ".moldbot", "genoma.json"),
-      path.join(resolvedHome, ".moldbot", "clawdbot.json"),
-      path.join(resolvedHome, ".moldbot", "moldbot.json"),
-      path.join(resolvedHome, ".moldbot", "moltbot.json"),
-      path.join(resolvedHome, ".moltbot", "genoma.json"),
-      path.join(resolvedHome, ".moltbot", "clawdbot.json"),
-      path.join(resolvedHome, ".moltbot", "moldbot.json"),
-      path.join(resolvedHome, ".moltbot", "moltbot.json"),
+      path.join(resolvedHome, ".genoma", "genome.json"),
+      path.join(resolvedHome, ".genome", "genoma.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
+      path.join(resolvedHome, ".genome", "moldbot.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
+      path.join(resolvedHome, ".genome", "genoma.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
+      path.join(resolvedHome, ".genome", "moldbot.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
+      path.join(resolvedHome, ".genome", "genoma.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
+      path.join(resolvedHome, ".genome", "moldbot.json"),
+      path.join(resolvedHome, ".genome", "genome.json"),
     ];
     expect(candidates).toEqual(expected);
   });
@@ -117,7 +117,7 @@ describe("state + config path candidates", () => {
 
   it("falls back to existing legacy state dir when ~/.genoma is missing", async () => {
     await withTempRoot("genoma-state-legacy-", async (root) => {
-      const legacyDir = path.join(root, ".clawdbot");
+      const legacyDir = path.join(root, ".genome");
       await fs.mkdir(legacyDir, { recursive: true });
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(legacyDir);

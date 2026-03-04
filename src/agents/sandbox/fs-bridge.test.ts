@@ -57,12 +57,12 @@ function dockerExecResult(stdout: string) {
 function createSandbox(overrides?: Partial<SandboxContext>): SandboxContext {
   return createSandboxTestContext({
     overrides: {
-      containerName: "moltbot-sbx-test",
+      containerName: "genome-sbx-test",
       ...overrides,
     },
     dockerOverrides: {
-      image: "moltbot-sandbox:bookworm-slim",
-      containerPrefix: "moltbot-sbx-",
+      image: "genome-sandbox:bookworm-slim",
+      containerPrefix: "genome-sbx-",
     },
   });
 }
@@ -213,7 +213,7 @@ describe("sandbox fs bridge shell compatibility", () => {
 
     const args = mockedExecDockerRaw.mock.calls.at(-1)?.[0] ?? [];
     expect(args).toEqual(
-      expect.arrayContaining(["moltbot-sbx-test", "sh", "-c", 'set -eu; cat -- "$1"']),
+      expect.arrayContaining(["genome-sbx-test", "sh", "-c", 'set -eu; cat -- "$1"']),
     );
     expect(getDockerPathArg(args)).toBe("/workspace-two/README.md");
   });

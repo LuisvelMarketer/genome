@@ -12,9 +12,9 @@ describe("pairing setup code", () => {
 
   beforeEach(() => {
     vi.stubEnv("GENOMA_GATEWAY_TOKEN", "");
-    vi.stubEnv("CLAWDBOT_GATEWAY_TOKEN", "");
+    vi.stubEnv("GENOMA_GATEWAY_TOKEN", "");
     vi.stubEnv("GENOMA_GATEWAY_PASSWORD", "");
-    vi.stubEnv("CLAWDBOT_GATEWAY_PASSWORD", "");
+    vi.stubEnv("GENOMA_GATEWAY_PASSWORD", "");
   });
 
   afterEach(() => {

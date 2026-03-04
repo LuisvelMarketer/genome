@@ -60,7 +60,7 @@ function resolveGatewayAuthToken(cfg: GenomaConfig, env: NodeJS.ProcessEnv): str
   if (configToken) {
     return configToken;
   }
-  const envToken = env.GENOMA_GATEWAY_TOKEN ?? env.CLAWDBOT_GATEWAY_TOKEN;
+  const envToken = env.GENOMA_GATEWAY_TOKEN ?? env.GENOMA_GATEWAY_TOKEN;
   const trimmedEnvToken = envToken?.trim();
   return trimmedEnvToken || undefined;
 }
@@ -335,7 +335,7 @@ export async function maybeScanExtraGatewayServices(
   const legacyServices = extraServices.filter((svc) => svc.legacy === true);
   if (legacyServices.length > 0) {
     const shouldRemove = await prompter.confirmSkipInNonInteractive({
-      message: "Remove legacy gateway services (clawdbot/moltbot) now?",
+      message: "Remove legacy gateway services (genome/genome) now?",
       initialValue: true,
     });
     if (shouldRemove) {

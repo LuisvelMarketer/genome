@@ -36,7 +36,7 @@ Status: legacy external CLI integration. Gateway spawns `imsg rpc` and communica
       <Step title="Install and verify imsg">
 
 ```bash
-brew install steipete/tap/imsg
+brew install LuisvelMarketer/tap/imsg
 imsg rpc --help
 ```
 

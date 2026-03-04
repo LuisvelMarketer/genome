@@ -34,18 +34,18 @@ This is a living document maintained by the Genoma community. See [CONTRIBUTING-
 
 ### 1.1 Purpose
 
-This threat model documents adversarial threats to the Genoma AI agent platform and ClawHub skill marketplace, using the MITRE ATLAS framework designed specifically for AI/ML systems.
+This threat model documents adversarial threats to the Genoma AI agent platform and Genome skill marketplace, using the MITRE ATLAS framework designed specifically for AI/ML systems.
 
 ### 1.2 Scope
 
-| Component              | Included | Notes                                            |
-| ---------------------- | -------- | ------------------------------------------------ |
+| Component            | Included | Notes                                            |
+| -------------------- | -------- | ------------------------------------------------ |
 | Genoma Agent Runtime | Yes      | Core agent execution, tool calls, sessions       |
-| Gateway                | Yes      | Authentication, routing, channel integration     |
-| Channel Integrations   | Yes      | WhatsApp, Telegram, Discord, Signal, Slack, etc. |
-| ClawHub Marketplace    | Yes      | Skill publishing, moderation, distribution       |
-| MCP Servers            | Yes      | External tool providers                          |
-| User Devices           | Partial  | Mobile apps, desktop clients                     |
+| Gateway              | Yes      | Authentication, routing, channel integration     |
+| Channel Integrations | Yes      | WhatsApp, Telegram, Discord, Signal, Slack, etc. |
+| Genome Marketplace   | Yes      | Skill publishing, moderation, distribution       |
+| MCP Servers          | Yes      | External tool providers                          |
+| User Devices         | Partial  | Mobile apps, desktop clients                     |
 
 ### 1.3 Out of Scope
 
@@ -113,7 +113,7 @@ Nothing is explicitly out of scope for this threat model.
 ┌─────────────────────────────────────────────────────────────────┐
 │                 TRUST BOUNDARY 5: Supply Chain                   │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │                      CLAWHUB                              │   │
+│  │                      GENOME                              │   │
 │  │  • Skill publishing (semver, SKILL.md required)           │   │
 │  │  • Pattern-based moderation flags                         │   │
 │  │  • VirusTotal scanning (coming soon)                      │   │
@@ -130,7 +130,7 @@ Nothing is explicitly out of scope for this threat model.
 | F2   | Gateway | Agent       | Routed messages    | Session isolation    |
 | F3   | Agent   | Tools       | Tool invocations   | Policy enforcement   |
 | F4   | Agent   | External    | web_fetch requests | SSRF blocking        |
-| F5   | ClawHub | Agent       | Skill code         | Moderation, scanning |
+| F5   | Genome  | Agent       | Skill code         | Moderation, scanning |
 | F6   | Agent   | Channel     | Responses          | Output filtering     |
 
 ---
@@ -144,7 +144,7 @@ Nothing is explicitly out of scope for this threat model.
 | Attribute               | Value                                                                |
 | ----------------------- | -------------------------------------------------------------------- |
 | **ATLAS ID**            | AML.T0006 - Active Scanning                                          |
-| **Description**         | Attacker scans for exposed Genoma gateway endpoints                |
+| **Description**         | Attacker scans for exposed Genoma gateway endpoints                  |
 | **Attack Vector**       | Network scanning, shodan queries, DNS enumeration                    |
 | **Affected Components** | Gateway, exposed API endpoints                                       |
 | **Current Mitigations** | Tailscale auth option, bind to loopback by default                   |
@@ -198,7 +198,7 @@ Nothing is explicitly out of scope for this threat model.
 | **ATLAS ID**            | AML.T0040 - AI Model Inference API Access                   |
 | **Description**         | Attacker steals authentication tokens from config files     |
 | **Attack Vector**       | Malware, unauthorized device access, config backup exposure |
-| **Affected Components** | ~/.genoma/credentials/, config storage                    |
+| **Affected Components** | ~/.genoma/credentials/, config storage                      |
 | **Current Mitigations** | File permissions                                            |
 | **Residual Risk**       | High - Tokens stored in plaintext                           |
 | **Recommendations**     | Implement token encryption at rest, add token rotation      |
@@ -264,9 +264,9 @@ Nothing is explicitly out of scope for this threat model.
 | Attribute               | Value                                                                    |
 | ----------------------- | ------------------------------------------------------------------------ |
 | **ATLAS ID**            | AML.T0010.001 - Supply Chain Compromise: AI Software                     |
-| **Description**         | Attacker publishes malicious skill to ClawHub                            |
+| **Description**         | Attacker publishes malicious skill to Genome                             |
 | **Attack Vector**       | Create account, publish skill with hidden malicious code                 |
-| **Affected Components** | ClawHub, skill loading, agent execution                                  |
+| **Affected Components** | Genome, skill loading, agent execution                                   |
 | **Current Mitigations** | GitHub account age verification, pattern-based moderation flags          |
 | **Residual Risk**       | Critical - No sandboxing, limited review                                 |
 | **Recommendations**     | VirusTotal integration (in progress), skill sandboxing, community review |
@@ -278,7 +278,7 @@ Nothing is explicitly out of scope for this threat model.
 | **ATLAS ID**            | AML.T0010.001 - Supply Chain Compromise: AI Software           |
 | **Description**         | Attacker compromises popular skill and pushes malicious update |
 | **Attack Vector**       | Account compromise, social engineering of skill owner          |
-| **Affected Components** | ClawHub versioning, auto-update flows                          |
+| **Affected Components** | Genome versioning, auto-update flows                           |
 | **Current Mitigations** | Version fingerprinting                                         |
 | **Residual Risk**       | High - Auto-updates may pull malicious versions                |
 | **Recommendations**     | Implement update signing, rollback capability, version pinning |
@@ -306,7 +306,7 @@ Nothing is explicitly out of scope for this threat model.
 | **ATLAS ID**            | AML.T0043 - Craft Adversarial Data                                     |
 | **Description**         | Attacker crafts skill content to evade moderation patterns             |
 | **Attack Vector**       | Unicode homoglyphs, encoding tricks, dynamic loading                   |
-| **Affected Components** | ClawHub moderation.ts                                                  |
+| **Affected Components** | Genome moderation.ts                                                   |
 | **Current Mitigations** | Pattern-based FLAG_RULES                                               |
 | **Residual Risk**       | High - Simple regex easily bypassed                                    |
 | **Recommendations**     | Add behavioral analysis (VirusTotal Code Insight), AST-based detection |
@@ -433,7 +433,7 @@ Nothing is explicitly out of scope for this threat model.
 
 ---
 
-## 4. ClawHub Supply Chain Analysis
+## 4. Genome Supply Chain Analysis
 
 ### 4.1 Current Security Controls
 
@@ -560,7 +560,7 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 ### 7.1 ATLAS Technique Mapping
 
-| ATLAS ID      | Technique Name                 | Genoma Threats                                                 |
+| ATLAS ID      | Technique Name                 | Genoma Threats                                                   |
 | ------------- | ------------------------------ | ---------------------------------------------------------------- |
 | AML.T0006     | Active Scanning                | T-RECON-001, T-RECON-002                                         |
 | AML.T0009     | Collection                     | T-EXFIL-001, T-EXFIL-002, T-EXFIL-003                            |
@@ -582,7 +582,7 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 | `src/infra/net/ssrf.ts`             | SSRF protection             | **Critical** |
 | `src/security/external-content.ts`  | Prompt injection mitigation | **Critical** |
 | `src/agents/sandbox/tool-policy.ts` | Tool policy enforcement     | **Critical** |
-| `convex/lib/moderation.ts`          | ClawHub moderation          | **High**     |
+| `convex/lib/moderation.ts`          | Genome moderation           | **High**     |
 | `convex/lib/skillPublish.ts`        | Skill publishing flow       | **High**     |
 | `src/routing/resolve-route.ts`      | Session isolation           | **Medium**   |
 
@@ -591,11 +591,11 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 | Term                 | Definition                                                |
 | -------------------- | --------------------------------------------------------- |
 | **ATLAS**            | MITRE's Adversarial Threat Landscape for AI Systems       |
-| **ClawHub**          | Genoma's skill marketplace                              |
-| **Gateway**          | Genoma's message routing and authentication layer       |
+| **Genome**           | Genoma's skill marketplace                                |
+| **Gateway**          | Genoma's message routing and authentication layer         |
 | **MCP**              | Model Context Protocol - tool provider interface          |
 | **Prompt Injection** | Attack where malicious instructions are embedded in input |
-| **Skill**            | Downloadable extension for Genoma agents                |
+| **Skill**            | Downloadable extension for Genoma agents                  |
 | **SSRF**             | Server-Side Request Forgery                               |
 
 ---

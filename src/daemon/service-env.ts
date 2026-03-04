@@ -276,7 +276,7 @@ export function buildNodeServiceEnvironment(params: {
   const platform = params.platform ?? process.platform;
   const sharedEnv = resolveSharedServiceEnvironmentFields(env, platform);
   const gatewayToken =
-    env.GENOMA_GATEWAY_TOKEN?.trim() || env.CLAWDBOT_GATEWAY_TOKEN?.trim() || undefined;
+    env.GENOMA_GATEWAY_TOKEN?.trim() || env.GENOMA_GATEWAY_TOKEN?.trim() || undefined;
   return {
     ...buildCommonServiceEnvironment(env, sharedEnv),
     GENOMA_GATEWAY_TOKEN: gatewayToken,

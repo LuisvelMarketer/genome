@@ -114,8 +114,8 @@ export { normalizePluginHttpPath } from "../plugins/http-path.js";
 export { registerPluginHttpRoute } from "../plugins/http-registry.js";
 export { emptyPluginConfigSchema } from "../plugins/config-schema.js";
 export type { GenomaConfig } from "../config/config.js";
-/** @deprecated Use GenomaConfig instead */
-export type { GenomaConfig as ClawdbotConfig } from "../config/config.js";
+/** @deprecated Use GenomeConfig instead */
+export type { GenomaConfig as GenomeConfig } from "../config/config.js";
 export { isDangerousNameMatchingEnabled } from "../config/dangerous-name-matching.js";
 
 export type { FileLockHandle, FileLockOptions } from "./file-lock.js";

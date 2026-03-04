@@ -16,14 +16,14 @@ vi.mock("../../gateway/call.js", () => ({
 describe("gateway tool defaults", () => {
   const envSnapshot = {
     genoma: process.env.GENOMA_GATEWAY_TOKEN,
-    clawdbot: process.env.CLAWDBOT_GATEWAY_TOKEN,
+    genome: process.env.GENOMA_GATEWAY_TOKEN,
   };
 
   beforeEach(() => {
     callGatewayMock.mockClear();
     configState.value = {};
     delete process.env.GENOMA_GATEWAY_TOKEN;
-    delete process.env.CLAWDBOT_GATEWAY_TOKEN;
+    delete process.env.GENOMA_GATEWAY_TOKEN;
   });
 
   afterAll(() => {
@@ -32,10 +32,10 @@ describe("gateway tool defaults", () => {
     } else {
       process.env.GENOMA_GATEWAY_TOKEN = envSnapshot.genoma;
     }
-    if (envSnapshot.clawdbot === undefined) {
-      delete process.env.CLAWDBOT_GATEWAY_TOKEN;
+    if (envSnapshot.genome === undefined) {
+      delete process.env.GENOMA_GATEWAY_TOKEN;
     } else {
-      process.env.CLAWDBOT_GATEWAY_TOKEN = envSnapshot.clawdbot;
+      process.env.GENOMA_GATEWAY_TOKEN = envSnapshot.genome;
     }
   });
 
@@ -94,7 +94,7 @@ describe("gateway tool defaults", () => {
 
   it("does not leak local env/config tokens to remote overrides", () => {
     process.env.GENOMA_GATEWAY_TOKEN = "local-env-token";
-    process.env.CLAWDBOT_GATEWAY_TOKEN = "legacy-env-token";
+    process.env.GENOMA_GATEWAY_TOKEN = "legacy-env-token";
     configState.value = {
       gateway: {
         auth: { token: "local-config-token" },

@@ -232,15 +232,15 @@ FROM node:22-bookworm
 RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
 # Example binary 1: Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
+RUN curl -L https://github.com/LuisvelMarketer/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
 
 # Example binary 2: Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
+RUN curl -L https://github.com/LuisvelMarketer/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
 
 # Example binary 3: WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
+RUN curl -L https://github.com/LuisvelMarketer/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
 
 # Add more binaries below using the same pattern
@@ -321,18 +321,18 @@ Paste your gateway token.
 Genoma runs in Docker, but Docker is not the source of truth.
 All long-lived state must survive restarts, rebuilds, and reboots.
 
-| Component           | Location                          | Persistence mechanism  | Notes                            |
-| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
-| Gateway config      | `/home/node/.genoma/`           | Host volume mount      | Includes `genoma.json`, tokens |
-| Model auth profiles | `/home/node/.genoma/`           | Host volume mount      | OAuth tokens, API keys           |
-| Skill configs       | `/home/node/.genoma/skills/`    | Host volume mount      | Skill-level state                |
-| Agent workspace     | `/home/node/.genoma/workspace/` | Host volume mount      | Code and agent artifacts         |
-| WhatsApp session    | `/home/node/.genoma/`           | Host volume mount      | Preserves QR login               |
-| Gmail keyring       | `/home/node/.genoma/`           | Host volume + password | Requires `GOG_KEYRING_PASSWORD`  |
-| External binaries   | `/usr/local/bin/`                 | Docker image           | Must be baked at build time      |
-| Node runtime        | Container filesystem              | Docker image           | Rebuilt every image build        |
-| OS packages         | Container filesystem              | Docker image           | Do not install at runtime        |
-| Docker container    | Ephemeral                         | Restartable            | Safe to destroy                  |
+| Component           | Location                        | Persistence mechanism  | Notes                           |
+| ------------------- | ------------------------------- | ---------------------- | ------------------------------- |
+| Gateway config      | `/home/node/.genoma/`           | Host volume mount      | Includes `genoma.json`, tokens  |
+| Model auth profiles | `/home/node/.genoma/`           | Host volume mount      | OAuth tokens, API keys          |
+| Skill configs       | `/home/node/.genoma/skills/`    | Host volume mount      | Skill-level state               |
+| Agent workspace     | `/home/node/.genoma/workspace/` | Host volume mount      | Code and agent artifacts        |
+| WhatsApp session    | `/home/node/.genoma/`           | Host volume mount      | Preserves QR login              |
+| Gmail keyring       | `/home/node/.genoma/`           | Host volume + password | Requires `GOG_KEYRING_PASSWORD` |
+| External binaries   | `/usr/local/bin/`               | Docker image           | Must be baked at build time     |
+| Node runtime        | Container filesystem            | Docker image           | Rebuilt every image build       |
+| OS packages         | Container filesystem            | Docker image           | Do not install at runtime       |
+| Docker container    | Ephemeral                       | Restartable            | Safe to destroy                 |
 
 ---
 

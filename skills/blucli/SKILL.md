@@ -13,7 +13,7 @@ metadata:
             {
               "id": "go",
               "kind": "go",
-              "module": "github.com/steipete/blucli/cmd/blu@latest",
+              "module": "github.com/LuisvelMarketer/blucli/cmd/blu@latest",
               "bins": ["blu"],
               "label": "Install blucli (go)",
             },

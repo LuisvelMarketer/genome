@@ -2,19 +2,19 @@
 
 ## Proyecto Original
 
-**Genoma** es un fork de [OpenClaw](https://github.com/openclaw/openclaw), un proyecto de código abierto bajo licencia MIT.
+**Genoma** es un fork de [Genome](https://github.com/genome/genome), un proyecto de código abierto bajo licencia MIT.
 
 ### Información del Proyecto Original
 
-- **Nombre**: OpenClaw
-- **Autor Original**: Peter Steinberger y contribuidores
-- **Repositorio Original**: https://github.com/openclaw/openclaw
+- **Nombre**: Genome
+- **Autor Original**: Luis Alfredo Velasquez Duran y contribuidores
+- **Repositorio Original**: https://github.com/genome/genome
 - **Licencia**: MIT License
 
 ### Fecha del Fork
 
 - **Fecha de Fork**: Marzo 2026
-- **Versión Base**: OpenClaw 2026.3.2
+- **Versión Base**: Genome 2026.3.2
 
 ---
 
@@ -34,7 +34,7 @@ De acuerdo con los términos de la licencia MIT, este proyecto:
 ```
 MIT License
 
-Copyright (c) 2024 OpenClaw Contributors
+Copyright (c) 2024 Genome Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,14 +59,16 @@ SOFTWARE.
 
 ## Modificaciones Realizadas por Genoma
 
-Las siguientes modificaciones han sido realizadas al código base de OpenClaw:
+Las siguientes modificaciones han sido realizadas al código base de Genome:
 
 ### Rebranding
-- Renombrado de "OpenClaw" a "Genoma" en todo el código
+
+- Renombrado de "Genome" a "Genoma" en todo el código
 - Actualización de documentación y archivos de configuración
 - Nuevo README.md con branding de Genoma
 
 ### Planificadas (Futuras Versiones)
+
 - Integración con PGA Platform (Prompt Genómico Autoevolutivo)
 - Sistema de seguridad Orbis
 - Instalador npm profesional
@@ -77,7 +79,7 @@ Las siguientes modificaciones han sido realizadas al código base de OpenClaw:
 
 Este fork es mantenido por el equipo de Genoma.
 
-Para contribuciones al proyecto original, visite: https://github.com/openclaw/openclaw
+Para contribuciones al proyecto original, visite: https://github.com/genome/genome
 
 ---
 
@@ -85,10 +87,10 @@ Para contribuciones al proyecto original, visite: https://github.com/openclaw/op
 
 Expresamos nuestro sincero agradecimiento a:
 
-- **Peter Steinberger** - Creador original de OpenClaw
-- **Contribuidores de OpenClaw** - Por construir una base excelente
+- **Luis Alfredo Velasquez Duran** - Creador original de Genome
+- **Contribuidores de Genome** - Por construir una base excelente
 - **Comunidad Open Source** - Por hacer posible proyectos como este
 
 ---
 
-*Última actualización: Marzo 2026*
+_Última actualización: Marzo 2026_

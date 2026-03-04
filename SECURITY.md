@@ -10,7 +10,7 @@ Report vulnerabilities directly to the repository where the issue lives:
 - **macOS desktop app** — [genoma/genoma](https://github.com/genoma/genoma) (apps/macos)
 - **iOS app** — [genoma/genoma](https://github.com/genoma/genoma) (apps/ios)
 - **Android app** — [genoma/genoma](https://github.com/genoma/genoma) (apps/android)
-- **ClawHub** — [genoma/clawhub](https://github.com/genoma/clawhub)
+- **Genome** — [genoma/genome](https://github.com/genoma/genome)
 - **Trust and threat model** — [genoma/trust](https://github.com/genoma/trust)
 
 For issues that don't fit a specific repo, or if you're unsure, email **[security@genoma.ai](mailto:security@genoma.ai)** and we'll route it.

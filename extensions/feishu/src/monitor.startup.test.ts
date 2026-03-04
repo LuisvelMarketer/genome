@@ -1,9 +1,9 @@
-import type { ClawdbotConfig } from "genoma/plugin-sdk";
+import type { GenomeConfig } from "genoma/plugin-sdk";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { monitorFeishuProvider, stopFeishuMonitor } from "./monitor.js";
 import { probeFeishuMock } from "./monitor.test-mocks.js";
 
-function buildMultiAccountWebsocketConfig(accountIds: string[]): ClawdbotConfig {
+function buildMultiAccountWebsocketConfig(accountIds: string[]): GenomeConfig {
   return {
     channels: {
       feishu: {
@@ -21,7 +21,7 @@ function buildMultiAccountWebsocketConfig(accountIds: string[]): ClawdbotConfig 
         ),
       },
     },
-  } as ClawdbotConfig;
+  } as GenomeConfig;
 }
 
 afterEach(() => {
