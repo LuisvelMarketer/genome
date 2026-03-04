@@ -709,6 +709,10 @@ export async function runEmbeddedAttempt(
     const ttsHint = params.config ? buildTtsSystemPromptHint(params.config) : undefined;
     const ownerDisplay = resolveOwnerDisplaySetting(params.config);
 
+    // Generate canary token for this run (for system prompt leakage detection)
+    const { generateCanary } = await import("../../../security/canary-token.js");
+    const canaryToken = generateCanary(params.runId);
+
     const appendPrompt = buildEmbeddedSystemPrompt({
       workspaceDir: effectiveWorkspace,
       defaultThinkLevel: params.thinkLevel,
@@ -738,6 +742,7 @@ export async function runEmbeddedAttempt(
       userTimeFormat,
       contextFiles,
       memoryCitationsMode: params.config?.memory?.citations,
+      canaryToken,
     });
     const systemPromptReport = buildSystemPromptReport({
       source: "run",
@@ -1653,6 +1658,9 @@ export async function runEmbeddedAttempt(
       session?.dispose();
       releaseWsSession(params.sessionId);
       await sessionLock.release();
+      // Clean up canary token for this run
+      const { clearCanary } = await import("../../../security/canary-token.js");
+      clearCanary(params.runId);
     }
   } finally {
     restoreSkillEnv?.();

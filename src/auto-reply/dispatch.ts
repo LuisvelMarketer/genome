@@ -40,6 +40,26 @@ export async function dispatchInboundMessage(params: {
   replyResolver?: typeof import("./reply.js").getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   const finalized = finalizeInboundContext(params.ctx);
+
+  // ── Prompt injection scan (covers Telegram, Discord, Slack, etc.) ──
+  const messageText = finalized.BodyForAgent || finalized.Body;
+  if (messageText) {
+    const { scanInboundMessage } = await import("../security/scan-inbound-message.js");
+    const senderKey = finalized.SenderNumber || finalized.From || undefined;
+    const injectionScan = scanInboundMessage(messageText, senderKey);
+    if (!injectionScan.allowed) {
+      console.log(
+        `[INJECTION_GUARD] Blocked inbound message from ${senderKey ?? "unknown"}: ${injectionScan.reason}`,
+      );
+      // Send a safe rejection via the dispatcher and return
+      params.dispatcher.sendFinalReply({ text: "I can't process that message." });
+      return await withReplyDispatcher({
+        dispatcher: params.dispatcher,
+        run: async () => ({ queuedFinal: true, counts: { final: 1, block: 0, tool: 0 } }),
+      });
+    }
+  }
+
   return await withReplyDispatcher({
     dispatcher: params.dispatcher,
     run: () =>

@@ -52,6 +52,7 @@ export function buildEmbeddedSystemPrompt(params: {
   userTimeFormat?: ResolvedTimeFormat;
   contextFiles?: EmbeddedContextFile[];
   memoryCitationsMode?: MemoryCitationsMode;
+  canaryToken?: string;
 }): string {
   return buildAgentSystemPrompt({
     workspaceDir: params.workspaceDir,
@@ -81,6 +82,7 @@ export function buildEmbeddedSystemPrompt(params: {
     userTimeFormat: params.userTimeFormat,
     contextFiles: params.contextFiles,
     memoryCitationsMode: params.memoryCitationsMode,
+    canaryToken: params.canaryToken,
   });
 }
 

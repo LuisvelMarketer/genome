@@ -231,6 +231,8 @@ export function buildAgentSystemPrompt(params: {
     channel: string;
   };
   memoryCitationsMode?: MemoryCitationsMode;
+  /** If provided, a canary token section is appended for leakage detection. */
+  canaryToken?: string;
 }) {
   const acpEnabled = params.acpEnabled !== false;
   const sandboxedRuntime = params.sandboxInfo?.enabled === true;
@@ -666,6 +668,12 @@ export function buildAgentSystemPrompt(params: {
     buildRuntimeLine(runtimeInfo, runtimeChannel, runtimeCapabilities, params.defaultThinkLevel),
     `Reasoning: ${reasoningLevel} (hidden unless on/stream). Toggle /reasoning; /status shows Reasoning when enabled.`,
   );
+
+  // Canary token for system prompt leakage detection
+  if (params.canaryToken) {
+    const { buildCanarySection } = require("../security/canary-token.js");
+    lines.push(buildCanarySection(params.canaryToken));
+  }
 
   return lines.filter(Boolean).join("\n");
 }

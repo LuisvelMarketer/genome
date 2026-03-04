@@ -483,6 +483,10 @@ export async function compactEmbeddedPiSessionDirect(
     });
     const ttsHint = params.config ? buildTtsSystemPromptHint(params.config) : undefined;
     const ownerDisplay = resolveOwnerDisplaySetting(params.config);
+    // Regenerate canary token for the rebuilt system prompt
+    const { getCanary } = await import("../../security/canary-token.js");
+    const canaryToken = getCanary(runId) ?? undefined;
+
     const appendPrompt = buildEmbeddedSystemPrompt({
       workspaceDir: effectiveWorkspace,
       defaultThinkLevel: params.thinkLevel,
@@ -511,6 +515,7 @@ export async function compactEmbeddedPiSessionDirect(
       userTimeFormat,
       contextFiles,
       memoryCitationsMode: params.config?.memory?.citations,
+      canaryToken,
     });
     const systemPromptOverride = createSystemPromptOverride(appendPrompt);
 

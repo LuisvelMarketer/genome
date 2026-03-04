@@ -739,6 +739,15 @@ export const chatHandlers: GatewayRequestHandlers = {
       return;
     }
     const inboundMessage = sanitizedMessageResult.message;
+
+    // ── Prompt injection scan ──────────────────────────────────────────
+    const { scanInboundMessage } = await import("../../security/scan-inbound-message.js");
+    const injectionScan = scanInboundMessage(inboundMessage);
+    if (!injectionScan.allowed) {
+      respond(false, undefined, errorShape(ErrorCodes.INVALID_REQUEST, injectionScan.reason));
+      return;
+    }
+
     const stopCommand = isChatStopCommandText(inboundMessage);
     const normalizedAttachments = normalizeRpcAttachmentsToChatAttachments(p.attachments);
     const rawMessage = inboundMessage.trim();

@@ -20,8 +20,8 @@ genoma setup
 
 ```bash
 # Clonar repositorio
-git clone https://github.com/LuisvelMarketer/genoma.git
-cd genoma
+git clone https://github.com/LuisvelMarketer/genome.git
+cd genome
 
 # Instalar dependencias y configurar
 pnpm install
@@ -37,18 +37,18 @@ pnpm dev
 
 ### Obligatorios
 
-| Requisito | Versión Mínima | Verificar |
-|-----------|----------------|----------|
-| Node.js | >= 22.12.0 | `node --version` |
-| pnpm | >= 10.0.0 | `pnpm --version` |
-| Git | >= 2.0 | `git --version` |
+| Requisito | Versión Mínima | Verificar        |
+| --------- | -------------- | ---------------- |
+| Node.js   | >= 22.12.0     | `node --version` |
+| pnpm      | >= 10.0.0      | `pnpm --version` |
+| Git       | >= 2.0         | `git --version`  |
 
 ### Opcionales
 
-| Requisito | Propósito |
-|-----------|----------|
-| Docker | Sandbox isolation |
-| PostgreSQL | Persistencia PGA |
+| Requisito  | Propósito          |
+| ---------- | ------------------ |
+| Docker     | Sandbox isolation  |
+| PostgreSQL | Persistencia PGA   |
 | Playwright | Browser automation |
 
 ---
@@ -64,6 +64,7 @@ genoma setup
 ```
 
 Características:
+
 - ✅ Wizard interactivo
 - ✅ Configuración simplificada
 - ✅ Auto-evolución PGA
@@ -78,6 +79,7 @@ pnpm setup:dev
 ```
 
 Características:
+
 - ✅ Acceso completo al código
 - ✅ Hot reload
 - ✅ Debug mode
@@ -104,6 +106,31 @@ genoma doctor
 # Ver/editar configuración
 genoma config --show
 genoma config --edit
+```
+
+---
+
+## Seguridad por Defecto
+
+Genome viene pre-configurado con seguridad desde la instalacion. **No necesitas configurar nada extra.**
+
+| Proteccion       | Default                | Detalle                                      |
+| :--------------- | :--------------------- | :------------------------------------------- |
+| Gateway bind     | `127.0.0.1` (loopback) | Solo accesible desde tu maquina              |
+| Auth token       | Auto-generado          | Token aleatorio de 48 bytes en cada arranque |
+| Canales          | Deshabilitados         | Solo se activan cuando agregas tus tokens    |
+| Control UI       | Solo localhost         | Panel web accesible unicamente en tu PC      |
+| Telegram/Discord | Polling saliente       | No abren puertos entrantes                   |
+
+Si necesitas exponer el gateway a tu red local (avanzado), configura en `genoma.json`:
+
+```json
+{
+  "gateway": {
+    "bind": "lan",
+    "auth": { "token": "tu-token-seguro-aqui" }
+  }
+}
 ```
 
 ---
@@ -144,6 +171,7 @@ genoma setup --provider ollama
 ## Configuración de Canales
 
 ### Terminal (CLI)
+
 Habilitado por defecto.
 
 ### Telegram
@@ -241,8 +269,8 @@ pnpm build
 
 ## Soporte
 
-- **Documentación**: https://github.com/LuisvelMarketer/genoma
-- **Issues**: https://github.com/LuisvelMarketer/genoma/issues
+- **Documentación**: https://github.com/LuisvelMarketer/genome
+- **Issues**: https://github.com/LuisvelMarketer/genome/issues
 - **Discord**: [Link al servidor]
 
 ---

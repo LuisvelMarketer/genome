@@ -231,7 +231,20 @@ Genome/
 └── docs/                       # Documentacion
 ```
 
-### Seguridad Multicapa
+### Seguridad
+
+Genome viene **seguro por defecto**. No necesitas configurar nada extra para usarlo en tu PC personal.
+
+**Red y acceso:**
+
+| Proteccion       | Default                                              |
+| :--------------- | :--------------------------------------------------- |
+| Gateway bind     | `127.0.0.1` — solo accesible desde tu maquina        |
+| Auth token       | Auto-generado (48 bytes aleatorios) en cada arranque |
+| Canales          | Deshabilitados hasta que agregas tus tokens          |
+| Telegram/Discord | Usan polling saliente, no abren puertos entrantes    |
+
+**PGA (evolucion de prompts):**
 
 - **Sistema Inmune**: Auto-rollback cuando un gen tiene rendimiento degradado
 - **MutationEvaluator**: Sandbox testing de mutaciones antes del deploy

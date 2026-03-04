@@ -263,7 +263,28 @@ export function handleMessageEnd(
   ctx.recordAssistantUsage((assistantMessage as { usage?: unknown }).usage);
   promoteThinkingTagsToBlocks(assistantMessage);
 
-  const rawText = extractAssistantText(assistantMessage);
+  let rawText = extractAssistantText(assistantMessage);
+
+  // ── Output security scan ─────────────────────────────────────────
+  {
+    const { scanOutput } = require("../security/output-scanner.js");
+    const { getCanary } = require("../security/canary-token.js");
+    const runId = ctx.params.runId;
+    const outputScan = scanOutput(rawText, runId);
+    if (outputScan.canaryLeaked) {
+      console.log("[SECURITY] CRITICAL: Canary token leaked in LLM output — redacting");
+      const canary = getCanary(runId);
+      if (canary) {
+        rawText = rawText.replaceAll(canary, "[REDACTED]");
+      }
+    }
+    if (!outputScan.safe) {
+      for (const warning of outputScan.warnings) {
+        console.log(`[SECURITY] Output warning: ${warning.type} — ${warning.detail}`);
+      }
+    }
+  }
+
   appendRawStream({
     ts: Date.now(),
     event: "assistant_message_end",
