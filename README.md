@@ -219,6 +219,7 @@ Genome/
 │   │   ├── types/              # GenomeV2, OperativeGene, FitnessVector
 │   │   ├── utils/              # tokens.ts, hash.ts, serialization.ts
 │   │   └── config/             # Configuracion PGA
+│   ├── security/               # Prompt injection guard, canary tokens, output scanner
 │   ├── commands/               # Comandos CLI
 │   ├── hooks/                  # Sistema de hooks
 │   └── ...
@@ -244,11 +245,20 @@ Genome viene **seguro por defecto**. No necesitas configurar nada extra para usa
 | Canales          | Deshabilitados hasta que agregas tus tokens          |
 | Telegram/Discord | Usan polling saliente, no abren puertos entrantes    |
 
+**Prompt Injection Protection (5 capas):**
+
+| Capa | Componente               | Funcion                                                                                                                                                                                                             |
+| :--- | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1    | **PromptInjectionGuard** | 77 patrones regex en modo `strict`, 15 tipos de inyeccion incluyendo skeleton_key, named_jailbreak (STAN/AIM/DAN), many_shot, inyeccion multilenguaje (9 idiomas), indirect injection, crescendo y encoding evasion |
+| 2    | **Inbound Scanner**      | Escaneo de cada mensaje entrante en gateway y canales (Telegram, Discord, Slack, etc.) antes de llegar al LLM                                                                                                       |
+| 3    | **Canary Tokens**        | Token unico por sesion embebido en el system prompt; si aparece en la respuesta del LLM, se detecta y redacta automaticamente                                                                                       |
+| 4    | **Output Scanner**       | Escaneo de respuestas del LLM antes de entregarlas al usuario — detecta fragments del system prompt, canary leaks e injection echoes                                                                                |
+| 5    | **Rate Limiter**         | Sliding-window por sender (5 intentos/min, lockout de 10 min) para frenar ataques repetidos                                                                                                                         |
+
 **PGA (evolucion de prompts):**
 
 - **Sistema Inmune**: Auto-rollback cuando un gen tiene rendimiento degradado
 - **MutationEvaluator**: Sandbox testing de mutaciones antes del deploy
-- **Prompt Injection Guard**: Deteccion y sanitizacion de ataques
 - **GenomeKernel**: Proteccion criptografica SHA-256 del cromosoma inmutable (C0)
 
 ---
@@ -312,7 +322,11 @@ WHATSAPP_PHONE_NUMBER=...
 
 - [x] Sistema Inmune con auto-rollback
 - [x] MutationEvaluator con sandbox
-- [x] Prompt Injection Guard
+- [x] Prompt Injection Guard (77 patrones, 15 tipos, modo strict)
+- [x] Inbound scanner conectado al pipeline (gateway + canales)
+- [x] Canary tokens por sesion con deteccion de fuga
+- [x] Output scanner (system prompt fragments, injection echoes)
+- [x] Rate limiter de inyeccion por sender
 
 ### v4.0 - Optimizacion (Actual)
 
