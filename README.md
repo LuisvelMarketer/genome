@@ -4,137 +4,210 @@
 
 # Genome
 
-### Agente Inteligente Autoevolutivo
+### The Secure AI Agent for Your Personal Computer
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org)
+[![Security](https://img.shields.io/badge/Security-Genome%20Shield-blueviolet.svg)](#genome-shield--enterprise-security)
 
-**Un agente de IA que aprende, muta y mejora solo — como el ADN.**
+**An AI agent that learns, evolves, and protects itself — like DNA.**
 
 Created by **Luis Alfredo Velasquez Duran**
 
-[Inicio Rapido](#-inicio-rapido) · [Interfaz Web](#-interfaz-web) · [GSEP](#-gsep---genomic-self-evolving-prompts) · [Extensiones](#-extensiones) · [Arquitectura](#-arquitectura) · [Contribuir](#-contribuir)
+[Quick Start](#quick-start) · [Security](#genome-shield--enterprise-security) · [Channels](#messaging-channels-42) · [Skills](#integrated-skills-54) · [GSEP](#gsep--genomic-self-evolving-prompts) · [Architecture](#architecture) · [Contributing](#contributing)
 
 </div>
 
 ---
 
-## Que es Genome?
+## What is Genome?
 
-**Genome** es un agente de IA autoevolutivo y gateway multi-canal de codigo abierto. Conecta multiples plataformas de mensajeria con proveedores de IA y evoluciona sus propios prompts automaticamente para mejorar con cada interaccion.
+**Genome** is an open-source, self-evolving AI agent that runs **directly on your computer** — not in the cloud. It connects your messaging platforms, productivity tools, and AI providers into a single intelligent assistant that improves with every interaction.
 
-|    Prompt Estatico     |      Genome (Autoevolutivo)       |
-| :--------------------: | :-------------------------------: |
-|   Rigido y obsoleto    |         Vivo y adaptativo         |
-| Mismo texto para todos |      Modular y personalizado      |
-|      Sin memoria       | Memoria que mejora con cada tarea |
-|         Manual         |        Autoajuste continuo        |
-|      Tokens fijos      |  Compresion evolutiva de tokens   |
+|    Static Prompt Agent    |          Genome (Self-Evolving)           |
+| :-----------------------: | :---------------------------------------: |
+|    Rigid and outdated     |            Living and adaptive            |
+| Same instructions for all |         Modular and personalized          |
+|         No memory         |    Memory that improves with each task    |
+|      Manual updates       |          Autonomous self-tuning           |
+|     Fixed token cost      |      Evolutionary token compression       |
+|    No security layers     | 7-layer Genome Shield (Secure by default) |
+
+### Key Features
+
+- **42+ Messaging Channels** — Telegram, Discord, WhatsApp, Slack, Signal, Matrix, iMessage, MS Teams, and more
+- **54+ Integrated Skills** — Apple Notes, 1Password, GitHub, Notion, Obsidian, browser automation, shell, and more
+- **Multi-LLM Support** — OpenAI, Anthropic Claude, Google Gemini, Ollama (local), AWS Bedrock, Perplexity
+- **Self-Evolving Prompts** — Powered by [GSEP](https://github.com/gsepcore/gsep) (Genomic Self-Evolving Prompts)
+- **Enterprise Security** — Genome Shield: 7 layers, 22 modules, secure by default
+- **Web Dashboard** — Real-time monitoring, chat interface, channel management
+- **Cross-Platform** — macOS, Linux, Windows (via Docker)
 
 ---
 
-## Inicio Rapido
+## Genome Shield — Enterprise Security
 
-### Para Usuarios
+Genome runs on your personal computer with access to your files, messages, credentials, and apps. **Genome Shield** ensures every operation is validated, every secret is encrypted, and every action is audited.
+
+**Secure by default. Zero configuration required. Zero new dependencies.**
+
+### 7-Layer Security Architecture
+
+```
++---------------------------------------------+
+|  Layer 7: Audit & Compliance                |
+|  Hash-chain log, data tracking, export      |
++---------------------------------------------+
+|  Layer 6: Network Control                   |
+|  Outbound allowlist, traffic audit          |
++---------------------------------------------+
+|  Layer 5: Execution Control                 |
+|  Command guard, filesystem boundary         |
++---------------------------------------------+
+|  Layer 4: Skill Security                    |
+|  Manifest permissions, Ed25519 signing      |
++---------------------------------------------+
+|  Layer 3: Credential Vault                  |
+|  macOS Keychain, AES-256-GCM, HKDF keys    |
++---------------------------------------------+
+|  Layer 2: Data Protection (DLP)             |
+|  PII redaction, LLM proxy, data classifier  |
++---------------------------------------------+
+|  Layer 1: GSEP Prompt Firewall              |
+|  C3 (53 patterns), C4 (6 checks), anomaly  |
++---------------------------------------------+
+```
+
+### What It Protects Against
+
+| Threat                                       | Protection                       | How                                                                               |
+| -------------------------------------------- | -------------------------------- | --------------------------------------------------------------------------------- |
+| Prompt injection via Telegram/Discord        | C3 Content Firewall              | 53 regex patterns across 7 categories, SHA-256 immutable core                     |
+| Your credit card number sent to OpenAI       | PII Redaction Engine             | 9 categories with Luhn validation, IBAN mod-97, re-hydration vault                |
+| LLM response infected with instructions      | C4 Behavioral Immune System      | 6 deterministic output checks, quarantine pipeline                                |
+| Agent executes `rm -rf /`                    | Command Execution Guard          | Allowlist + blocklist, `execFile` only (no shell), user approval                  |
+| Agent reads `~/.ssh/id_rsa`                  | Filesystem Boundary              | Path ACL, symlink escape prevention, denied paths always enforced                 |
+| Agent contacts malicious server              | Outbound Allowlist               | Domain whitelist with wildcards, SSRF prevention (blocks private IPs)             |
+| Credentials stored in plaintext              | Keychain Vault                   | macOS Keychain + AES-256-GCM + HKDF key hierarchy                                 |
+| Unsigned plugin runs malicious code          | Skill Signer + Capability Broker | Ed25519 signing, JIT capability grants, deny by default                           |
+| No record of what the agent did              | Tamper-Proof Audit Log           | Hash chain (blockchain-like), root hash in Keychain, encrypted entries            |
+| Sensitive data sent to cloud without consent | Data Classifier + LLM Proxy      | Classifies as public/internal/confidential/restricted, routes sensitive to Ollama |
+
+### 4 Security Profiles
+
+| Feature            | Paranoid            | Secure (DEFAULT)            | Standard             | Developer    |
+| ------------------ | ------------------- | --------------------------- | -------------------- | ------------ |
+| C3/C4 Firewall     | Full + quarantine   | Full + sanitize             | Structural           | Log-only     |
+| PII Redaction      | All 9 categories    | All 9 categories            | CC/SSN/API keys      | Off          |
+| LLM Routing        | Local only (Ollama) | Local preferred             | Cloud with filter    | Cloud direct |
+| Credentials        | Keychain required   | Keychain required           | Keychain recommended | .env allowed |
+| Skill Verification | Signed + manifest   | Signed + manifest           | Manifest only        | None         |
+| Command Execution  | Ask every command   | Allowlist + ask destructive | Allowlist            | Unrestricted |
+| Filesystem         | Minimal whitelist   | Configured paths            | Home directory       | Unrestricted |
+| Network            | Localhost only      | LLM + channels only         | Broad allowlist      | Unrestricted |
+| Audit Log          | Verbose + encrypted | Standard + signed           | Standard             | Basic        |
+| Session Timeout    | 1 hour              | 8 hours                     | 24 hours             | Never        |
+
+> **Secure** is the default profile. Users must explicitly opt into less security.
+
+### vs. Other AI Agents
+
+| Feature                    |    Genome Shield    | ChatGPT Desktop | Claude Desktop | Cursor | Copilot |
+| -------------------------- | :-----------------: | :-------------: | :------------: | :----: | :-----: |
+| PII redaction before LLM   |         Yes         |       No        |       No       |   No   |   No    |
+| Prompt injection firewall  |     53 patterns     |      Basic      |     Basic      |   No   |   No    |
+| Output infection detection |      6 checks       |       No        |       No       |   No   |   No    |
+| Encrypted credentials      |      Keychain       |      .env       |      .env      |  .env  |  OAuth  |
+| Tamper-proof audit log     |     Hash chain      |       No        |       No       |   No   |   No    |
+| Execution sandboxing       | Allowlist + signing |       N/A       |      N/A       | Basic  |   N/A   |
+| Network allowlist          |     Per-domain      |       No        |       No       |   No   |   No    |
+| Security profiles          |      4 levels       |       No        |       No       |   No   |   No    |
+
+---
+
+## Quick Start
+
+### For Users
 
 ```bash
-# Instalacion interactiva
+# Interactive setup
 npx genoma-setup
 
-# O instalacion rapida con OpenAI
+# Or quick setup with OpenAI
 npx genoma-setup --quick --provider openai
 ```
 
-### Para Desarrolladores
+### For Developers
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/LuisvelMarketer/genome.git
 cd genome
-
-# Instalar dependencias
 pnpm install
-
-# Configurar
 cp .env.example .env
-nano .env  # Agregar tus API keys
-
-# Iniciar en modo desarrollo
+nano .env  # Add your API key (one provider is enough)
 pnpm dev
 ```
 
-### Con Docker
+### With Docker
 
 ```bash
 docker build -t genome .
 docker run -d --name genome \
   -v $(pwd)/.env:/app/.env \
-  -p 3000:3000 \
+  -p 127.0.0.1:3000:3000 \
   genome
 ```
 
-> Para instrucciones detalladas de instalacion, configuracion de canales y solucion de problemas, consulta la [Guia de Instalacion](INSTALL.md).
+> Detailed installation guide: [INSTALL.md](INSTALL.md)
 
 ---
 
-## Interfaz Web
+## Web Interface
 
-Genome incluye un panel de control web completo para interactuar con el agente y gestionar todos los servicios.
+Genome includes a complete web dashboard for managing the agent and all services.
 
 ```bash
-cd ui
-pnpm install
-pnpm dev
-# Acceder en http://localhost:5173
+cd ui && pnpm install && pnpm dev
+# Access at http://localhost:5173
 ```
 
-### Funcionalidades
-
-| Modulo            | Descripcion                                                   |
-| :---------------- | :------------------------------------------------------------ |
-| **Chat**          | Interfaz de conversacion en tiempo real con streaming         |
-| **Canales**       | Gestion de integraciones (Telegram, Discord, WhatsApp, etc.)  |
-| **Agentes**       | Configuracion de agentes, tools, skills y cron jobs           |
-| **Sesiones**      | Historial y gestion de sesiones de usuario                    |
-| **Uso**           | Metricas y analiticas de consumo                              |
-| **Configuracion** | Ajustes del sistema con validacion de formularios             |
-| **Cron**          | Programacion de tareas automaticas con historial de ejecucion |
-| **Logs**          | Visor de eventos con filtros en tiempo real                   |
-| **Debug**         | Utilidades de depuracion e invocacion de metodos              |
-
-### Idiomas Soportados
-
-English, Deutsch, Portugues (BR), Chino Simplificado, Chino Tradicional
-
-### Stack Tecnologico
-
-Construido con [Lit](https://lit.dev/) (Web Components), [Vite](https://vitejs.dev/) y TypeScript.
+| Module       | Description                                             |
+| ------------ | ------------------------------------------------------- |
+| **Chat**     | Real-time conversation with streaming                   |
+| **Channels** | Manage integrations (Telegram, Discord, WhatsApp, etc.) |
+| **Agents**   | Configure agents, tools, skills, and cron jobs          |
+| **Sessions** | User session history and management                     |
+| **Usage**    | Consumption metrics and analytics                       |
+| **Config**   | System settings and security profiles                   |
+| **Cron**     | Scheduled task management                               |
+| **Logs**     | Real-time log viewer with filtering                     |
 
 ---
 
-## GSEP - Genomic Self-Evolving Prompts
+## GSEP — Genomic Self-Evolving Prompts
 
-El corazon de Genome. Un sistema de evolucion genomica que optimiza prompts automaticamente.
-Powered by [`@gsep/core`](https://github.com/gsepcore/gsep).
+The evolution engine behind Genome. Powered by [`@gsep/core`](https://github.com/gsepcore/gsep).
 
-### Arquitectura de 5 Cromosomas
+### 5-Chromosome Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                       GSEP Genome                         │
-├──────────────────────────────────────────────────────────┤
-│  C0 (Inmutable)    │ Identidad, etica, seguridad (SHA-256)│
-│  C1 (Operativo)    │ Genes mutables con fitness 6D        │
-│  C2 (Epigenetico)  │ Adaptaciones por usuario             │
-│  C3 (Firewall)     │ Defensa de input (57 patrones)       │
-│  C4 (Inmune)       │ Deteccion de output infectado        │
-└──────────────────────────────────────────────────────────┘
++-----------------------------------------------------------+
+|  C0: Immutable DNA (Identity, Ethics, Security) SHA-256   |
++-----------------------------------------------------------+
+|  C1: Operative Genes (Tools, Patterns) Slow mutation      |
++-----------------------------------------------------------+
+|  C2: Epigenomes (User Preferences) Fast mutation           |
++-----------------------------------------------------------+
+|  C3: Content Firewall (53 patterns, 7 categories)         |
++-----------------------------------------------------------+
+|  C4: Behavioral Immune System (6 output checks)           |
++-----------------------------------------------------------+
 ```
 
-### Integracion
+### Integration
 
-Genome usa GSEP via middleware — dos hooks que envuelven tu agente:
+Genome uses GSEP via middleware — two hooks that wrap the agent:
 
 ```typescript
 import { GSEPMiddleware } from "@gsep/core";
@@ -144,195 +217,254 @@ const mw = await GSEPMiddleware.create({
   name: "genome-agent",
 });
 
-// Antes de ejecutar el agente
+// Before LLM call — enhances prompt + scans for threats
 const { prompt, rejected } = await mw.before(systemPrompt, {
   message: userMessage,
   userId: "user-123",
 });
 
-// Despues de ejecutar
+// After LLM call — records feedback + triggers evolution
 await mw.after(response, { userId: "user-123", feedback: score });
 ```
 
-> Documentacion completa: [gsepcore.com](https://gsepcore.com)
+> Full documentation: [gsepcore.com](https://gsepcore.com) | [GitHub](https://github.com/gsepcore/gsep)
 
 ---
 
-## Extensiones
+## Messaging Channels (42+)
 
-### Canales de Mensajeria (42+)
+| Category       | Platforms                                               |
+| -------------- | ------------------------------------------------------- |
+| **Chat**       | WhatsApp, Telegram, Discord, Slack, Signal, Matrix, IRC |
+| **Enterprise** | Microsoft Teams, Google Chat, Mattermost, Feishu/Lark   |
+| **Social**     | Twitch, Line, Nostr                                     |
+| **Apple**      | iMessage, BlueBubbles                                   |
+| **Other**      | Synology Chat, Nextcloud Talk, Zalo                     |
 
-| Categoria       | Plataformas                                             |
-| :-------------- | :------------------------------------------------------ |
-| **Chat**        | WhatsApp, Telegram, Discord, Slack, Signal, Matrix, IRC |
-| **Empresarial** | Microsoft Teams, Google Chat, Mattermost, Feishu        |
-| **Social**      | Twitch, Line, Nostr                                     |
-| **Otros**       | iMessage, BlueBubbles, Synology Chat, Nextcloud Talk    |
-
-### Skills Integrados (54+)
-
-| Categoria         | Skills                                                       |
-| :---------------- | :----------------------------------------------------------- |
-| **Productividad** | Notion, Linear, Todoist, Airtable                            |
-| **Multimedia**    | Spotify, YouTube                                             |
-| **Desarrollo**    | GitHub, GitLab                                               |
-| **Hogar**         | Home Assistant                                               |
-| **Utilidades**    | Busqueda web, generacion de imagenes, analisis de documentos |
-
-### Proveedores de IA
-
-- OpenAI (GPT-4, GPT-3.5)
-- Anthropic (Claude)
-- Google (Gemini)
-- Modelos locales via Ollama
-- Azure OpenAI
-- DeepSeek, Mistral, y mas
+All channels are protected by Genome Shield — every inbound message passes through C3 firewall and PII redaction before reaching the LLM.
 
 ---
 
-## Arquitectura
+## Integrated Skills (54+)
+
+| Category          | Skills                                                                       |
+| ----------------- | ---------------------------------------------------------------------------- |
+| **Productivity**  | Notion, Linear, Todoist, Airtable, Trello, Things                            |
+| **Notes**         | Apple Notes, Obsidian, Bear Notes                                            |
+| **Communication** | iMessage, Gmail (himalaya), Slack messages                                   |
+| **Development**   | GitHub, GitLab, code execution, git operations                               |
+| **Multimedia**    | Spotify, YouTube, image generation                                           |
+| **System**        | Shell execution, file management, clipboard, browser automation              |
+| **Security**      | 1Password (with Genome Shield gating)                                        |
+| **AI**            | Web search (Brave), URL reading, PDF processing                              |
+| **Voice**         | Speech-to-text (Deepgram), text-to-speech (ElevenLabs), phone calls (Twilio) |
+
+---
+
+## AI Provider Support
+
+| Provider           | Models                      | Adapter  |
+| ------------------ | --------------------------- | -------- |
+| **OpenAI**         | GPT-4o, GPT-4, GPT-3.5      | Built-in |
+| **Anthropic**      | Claude Opus, Sonnet, Haiku  | Built-in |
+| **Google**         | Gemini Pro, Flash           | Built-in |
+| **Ollama**         | Llama, Mistral, Phi (local) | Built-in |
+| **AWS Bedrock**    | Claude, Titan, Llama        | Built-in |
+| **Perplexity**     | Sonar                       | Built-in |
+| **OpenRouter**     | Multi-model proxy           | Built-in |
+| **GitHub Copilot** | GPT-4o via Copilot          | Built-in |
+| **Qwen**           | Qwen-Max, Plus              | Built-in |
+
+---
+
+## Architecture
 
 ```
-Genome/
-├── src/
-│   ├── gsep/                   # GSEP integration (via @gsep/core middleware)
-│   ├── security/               # Prompt injection guard, canary tokens, output scanner
-│   ├── commands/               # Comandos CLI
-│   ├── hooks/                  # Sistema de hooks
-│   └── ...
-├── ui/                         # Panel de control web (Lit + Vite)
-│   └── src/
-│       ├── ui/                 # Componentes: chat, canales, agentes, config
-│       └── i18n/               # Traducciones (en, de, pt-BR, zh-CN, zh-TW)
-├── extensions/                 # 42+ extensiones de mensajeria
-├── apps/                       # Apps nativas (iOS, Android, macOS)
-└── docs/                       # Documentacion
+User Input (CLI/Web/Telegram/Discord/...)
+     |
+     v
++---------------------------+
+|      GATEWAY SERVER       |
+|  Auth | Router | Sessions |
++----------+----------------+
+           |
+           v
++---------------------------+
+|     GENOME SHIELD         |    <-- 7 layers active
+|  C3 Firewall (53 patterns)|
+|  PII Redaction (9 types)  |
+|  Data Classification      |
++----------+----------------+
+           |
+           v
++---------------------------+
+|     AGENT RUNTIME         |
+|  GSEP Evolution Engine    |
+|  Skill Router | MCP       |
++----------+----------------+
+           |
+           v
++---------------------------+
+|    EXECUTION LAYER        |
+|  Command Guard (allowlist)|
+|  FS Boundary (path ACL)   |
+|  Network Allowlist        |
++----------+----------------+
+           |
+           v
++---------------------------+
+|     AUDIT LAYER           |
+|  Hash-chain log           |
+|  Data access tracking     |
+|  Compliance export        |
++---------------------------+
 ```
 
-### Seguridad
+### Project Structure
 
-Genome viene **seguro por defecto**. No necesitas configurar nada extra para usarlo en tu PC personal.
-
-**Red y acceso:**
-
-| Proteccion       | Default                                              |
-| :--------------- | :--------------------------------------------------- |
-| Gateway bind     | `127.0.0.1` — solo accesible desde tu maquina        |
-| Auth token       | Auto-generado (48 bytes aleatorios) en cada arranque |
-| Canales          | Deshabilitados hasta que agregas tus tokens          |
-| Telegram/Discord | Usan polling saliente, no abren puertos entrantes    |
-
-**Prompt Injection Protection (5 capas):**
-
-| Capa | Componente               | Funcion                                                                                                                                                                                                             |
-| :--- | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1    | **PromptInjectionGuard** | 77 patrones regex en modo `strict`, 15 tipos de inyeccion incluyendo skeleton_key, named_jailbreak (STAN/AIM/DAN), many_shot, inyeccion multilenguaje (9 idiomas), indirect injection, crescendo y encoding evasion |
-| 2    | **Inbound Scanner**      | Escaneo de cada mensaje entrante en gateway y canales (Telegram, Discord, Slack, etc.) antes de llegar al LLM                                                                                                       |
-| 3    | **Canary Tokens**        | Token unico por sesion embebido en el system prompt; si aparece en la respuesta del LLM, se detecta y redacta automaticamente                                                                                       |
-| 4    | **Output Scanner**       | Escaneo de respuestas del LLM antes de entregarlas al usuario — detecta fragments del system prompt, canary leaks e injection echoes                                                                                |
-| 5    | **Rate Limiter**         | Sliding-window por sender (5 intentos/min, lockout de 10 min) para frenar ataques repetidos                                                                                                                         |
-
-**GSEP (evolucion de prompts):**
-
-- **Sistema Inmune**: Auto-rollback cuando un gen tiene rendimiento degradado
-- **MutationEvaluator**: Sandbox testing de mutaciones antes del deploy
-- **GenomeKernel**: Proteccion criptografica SHA-256 del cromosoma inmutable (C0)
+```
+genome/
++-- src/
+|   +-- gsep/                   # GSEP + Genome Shield integration
+|   +-- security/               # Security modules (ImmuneSystem, MutationEvaluator, etc.)
+|   +-- agents/                 # Agent runtime and tools
+|   +-- channels/               # Messaging channel implementations
+|   +-- gateway/                # HTTP/WebSocket gateway server
+|   +-- skills/                 # Bundled skills
+|   +-- browser/                # Playwright browser automation
+|   +-- process/                # Command execution
+|   +-- hooks/                  # Hook system
+|   +-- memory/                 # Memory and vector search
+|   +-- media/                  # Media processing (images, audio, video)
+|   +-- tts/                    # Text-to-speech
+|   +-- cron/                   # Scheduled tasks
+|   +-- config/                 # Configuration management
+|   +-- cli/                    # CLI commands
+|   +-- tui/                    # Terminal UI
+|   +-- web/                    # Web interface backend
++-- ui/                         # Web dashboard (Lit + Vite)
++-- extensions/                 # 42+ messaging channel extensions
++-- apps/                       # Native apps (iOS, Android, macOS)
++-- skills/                     # Bundled skill definitions
++-- docs/                       # Documentation
+```
 
 ---
 
-## Configuracion
+## Configuration
 
-### Variables de Entorno
+### Environment Variables
 
 ```env
-# Proveedor de IA (requerido)
+# AI Provider (one is enough)
 OPENAI_API_KEY=sk-...
-# O usa otro proveedor
+# Or
 ANTHROPIC_API_KEY=sk-ant-...
 
-# Extensiones (opcional)
+# Messaging Channels (optional)
 TELEGRAM_BOT_TOKEN=...
 DISCORD_BOT_TOKEN=...
-WHATSAPP_PHONE_NUMBER=...
-```
 
-### GSEP Config
-
-```env
-# Enable genomic self-evolution
+# GSEP Security
 GSEP_ENABLED=true
 GSEP_AUTO_MUTATION=true
-GSEP_AUTO_ROLLBACK=true
 GSEP_STORAGE_TYPE=database
 ```
 
-> Full GSEP configuration: see [`@gsep/core` docs](https://github.com/gsepcore/gsep)
+### Security Profile
+
+The default security profile is **Secure**. To change:
+
+```typescript
+// In src/gsep/index.ts
+const shield = await initGenomeShield({ profile: "paranoid" });
+```
+
+Or set in genome config:
+
+```json
+{
+  "securityProfile": "secure"
+}
+```
 
 ---
 
 ## Roadmap
 
-### v1.0 - Base
+### v1.0 — Base
 
-- [x] Gateway multi-canal
-- [x] 42+ extensiones de mensajeria
-- [x] 54+ skills integrados
-- [x] Browser automation con Playwright
+- [x] Multi-channel gateway
+- [x] 42+ messaging extensions
+- [x] Browser automation with Playwright
+- [x] 54+ integrated skills
 
-### v2.0 - Evolution
+### v2.0 — Evolution
 
-- [x] Sistema de evolucion genomica (legacy PGA, now migrating to GSEP)
-- [x] Evolucion y aprendizaje automatico
-- [x] Registro genomico de agentes
+- [x] Genomic self-evolution (legacy PGA, now GSEP)
+- [x] Automatic learning and adaptation
+- [x] Gene registry for agent knowledge sharing
 
-### v3.0 - Seguridad
+### v3.0 — Security
 
-- [x] Sistema Inmune con auto-rollback
-- [x] MutationEvaluator con sandbox
-- [x] Prompt Injection Guard (77 patrones, 15 tipos, modo strict)
-- [x] Inbound scanner conectado al pipeline (gateway + canales)
-- [x] Canary tokens por sesion con deteccion de fuga
+- [x] Immune system with auto-rollback
+- [x] MutationEvaluator with sandbox testing
+- [x] Prompt Injection Guard (77 patterns, 15 types)
+- [x] Canary tokens with leak detection
 - [x] Output scanner (system prompt fragments, injection echoes)
-- [x] Rate limiter de inyeccion por sender
 
-### v4.0 - Optimizacion (Actual)
+### v4.0 — Optimization (Current)
 
-- [x] Compresion evolutiva de tokens
-- [x] Presupuesto de tokens con ranking por eficiencia
-- [x] Compresion eager al inicializar
-- [x] Estrategia `compress` en MutationOperator
-- [ ] Instalador npm profesional (`npm create genome`)
-- [ ] Wizard de configuracion interactivo
+- [x] Evolutionary token compression
+- [x] Professional npm installer
+- [x] Enhanced CLI commands
 
----
+### v5.0 — Genome Shield (Current)
 
-## Contribuir
-
-Las contribuciones son bienvenidas! Lee la [guia de contribucion](CONTRIBUTING.md) antes de enviar un PR.
-
-```bash
-git checkout -b feature/mi-feature
-git commit -m 'Add: mi nueva feature'
-git push origin feature/mi-feature
-# Abre un Pull Request
-```
+- [x] 7-layer enterprise security architecture
+- [x] 22 security modules via @gsep/core
+- [x] PII redaction with 9 categories + Luhn validation
+- [x] macOS Keychain + AES-256-GCM credential vault
+- [x] Tamper-proof audit log with hash chain
+- [x] Ed25519 skill signing + capability broker
+- [x] Command execution guard + filesystem boundary
+- [x] Outbound network allowlist with SSRF prevention
+- [x] 4 security profiles (Secure by default)
+- [x] Compliance export (JSON/CSV) for GDPR Art. 15
 
 ---
 
-## Licencia
+## Contributing
 
-MIT License - Copyright (c) 2026 Luis Alfredo Velasquez Duran
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Ver [LICENSE](LICENSE) para detalles.
+Current priorities:
+
+- **GSEP**: Integrating Genomic Self-Evolving Prompts (`@gsep/core`) for autonomous prompt evolution
+- **Stability**: Fixing edge cases in channel connections
+- **UX**: Improving the onboarding wizard and error messages
+- **Performance**: Optimizing token usage and compaction logic
+
+---
+
+## Security
+
+For security vulnerabilities, please see [SECURITY.md](SECURITY.md).
+
+Genome Shield is active by default with the **Secure** profile. For detailed security architecture, see the [Genome Shield section](#genome-shield--enterprise-security).
+
+---
+
+## License
+
+[MIT](LICENSE) — Created by **Luis Alfredo Velasquez Duran**
 
 ---
 
 <div align="center">
 
-**Genome** — _Agentes que nunca se vuelven obsoletos_
+**Genome** — The AI agent that evolves, protects, and works for you.
 
-Created by Luis Alfredo Velasquez Duran
-
-[Volver arriba](#)
+[Website](https://gsepcore.com) · [Documentation](https://docs.gsepcore.com) · [Issues](https://github.com/LuisvelMarketer/genome/issues) · [Discussions](https://github.com/LuisvelMarketer/genome/discussions)
 
 </div>
