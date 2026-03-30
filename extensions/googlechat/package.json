@@ -8,7 +8,7 @@
     "google-auth-library": "^10.6.1"
   },
   "peerDependencies": {
-    "genoma": ">=2026.3.1"
+    "genoma": "workspace:*"
   },
   "genoma": {
     "extensions": [

@@ -5,7 +5,7 @@
   "description": "Genoma core memory search plugin",
   "type": "module",
   "peerDependencies": {
-    "genoma": ">=2026.3.1"
+    "genoma": "workspace:*"
   },
   "genoma": {
     "extensions": [
