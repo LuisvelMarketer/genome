@@ -201,6 +201,7 @@
     "@snazzah/davey": "^0.1.9",
     "@whiskeysockets/baileys": "7.0.0-rc.9",
     "ajv": "^8.18.0",
+    "brace-expansion": "^5.0.5",
     "chalk": "^5.6.2",
     "chokidar": "^5.0.0",
     "cli-highlight": "^2.1.11",
@@ -226,7 +227,9 @@
     "opusscript": "^0.1.1",
     "ora": "^8.0.0",
     "osc-progress": "^0.3.0",
+    "path-to-regexp": "^8.4.0",
     "pdfjs-dist": "^5.5.207",
+    "picomatch": "^4.0.4",
     "playwright-core": "1.58.2",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.34.5",
@@ -236,7 +239,7 @@
     "tslog": "^4.10.2",
     "undici": "^7.22.0",
     "ws": "^8.19.0",
-    "yaml": "^2.8.2",
+    "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
