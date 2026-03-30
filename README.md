@@ -52,6 +52,22 @@ Genome runs on your personal computer with access to your files, messages, crede
 
 **Secure by default. Zero configuration required. Zero new dependencies.**
 
+### What's Active and What's Optional
+
+Genome Shield has 3 levels. You choose what you need:
+
+| Level           | What activates                                                                                                                             | Who needs it                                                | Config needed                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Automatic**   | Prompt firewall (53 patterns), output infection detection (6 checks), PII redaction (9 categories), data classification, anomaly detection | **Everyone** — active on every `chat()` call                | **None.** Works out of the box.                                                  |
+| **Full Shield** | Everything above + macOS Keychain vault, filesystem boundary, command execution guard, outbound network allowlist, tamper-proof audit log  | **Professionals & SMBs** — personal Mac with sensitive data | One line: `initGenomeShield({ profile: 'secure' })`                              |
+| **Enterprise**  | Everything above + RBAC (5 roles), MFA (TOTP), enterprise policies (YAML), secret rotation, GDPR compliance, SOC 2 controls                | **Companies with teams, compliance requirements**           | `initGenomeShield({ profile: 'secure', enterprise: { rbac: true, mfa: true } })` |
+
+**In short:**
+
+- **Install and run** → you're already protected (prompt firewall + PII redaction + output scanning)
+- **Add one line** → full 7-layer protection with encrypted credentials and audit trail
+- **Add enterprise config** → RBAC, MFA, GDPR, SOC 2 for teams and compliance
+
 ### 7-Layer Security Architecture
 
 ```
