@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// GSEP Auto-Instrumentation — patches fetch before any LLM SDK loads
+import "./gsep-preload.mjs";
 import module from "node:module";
 
 // https://nodejs.org/api/module.html#module-compile-cache
