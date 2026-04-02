@@ -4,13 +4,46 @@
  * Imported as first line in genoma.mjs:
  *   import './gsep-preload.mjs'
  *
- * Intercepts streaming + non-streaming LLM calls.
- * Agent gets real-time streaming. GSEP accumulates in background.
+ * Runs the FULL 32-step GSEP pipeline on every LLM call:
+ *   BEFORE: C0 integrity, C3 firewall, Purpose Lock, prompt assembly
+ *           with evolved genes, context memory, PII redaction
+ *   AFTER:  C4 immune scan, fitness calculation, drift detection,
+ *           evolution trigger, pattern memory, growth journal
+ *
+ * Agent gets real-time streaming. GSEP processes in background.
  */
+
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 const _originalFetch = globalThis.fetch;
 let _genome = null;
 let _initializing = null;
+let _processing = false; // Guard against nested interception
+
+function detectAgentName() {
+  if (process.env.GSEP_AGENT_NAME) {
+    return process.env.GSEP_AGENT_NAME;
+  }
+  const stateDir = process.env.GENOMA_STATE_DIR || join(process.env.HOME || "", ".genoma");
+  try {
+    const identity = readFileSync(join(stateDir, "workspace", "IDENTITY.md"), "utf-8");
+    const match = identity.match(/\*\*Name:\*\*\s*(.+)/);
+    if (match && match[1].trim()) {
+      return match[1].trim();
+    }
+  } catch {}
+  try {
+    const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf-8"));
+    if (pkg.displayName) {
+      return pkg.displayName;
+    }
+    if (pkg.name) {
+      return pkg.name;
+    }
+  } catch {}
+  return "auto-agent";
+}
 
 const LLM_PATTERNS = [
   "api.openai.com/v1/chat/completions",
@@ -75,15 +108,15 @@ async function initGSEP(url, headers, model) {
       };
 
       _genome = await GSEP.quickStart({
-        name: "auto-agent",
+        name: detectAgentName(),
         llm,
-        preset: "standard",
-        dashboardPort: 0,
+        preset: "full",
+        dashboardPort: 4200,
       });
 
-      console.log("\n[GSEP] 🧬 Pipeline active — using your agent's LLM connection.");
-      console.log("[GSEP] 32 steps per call: Evolution ON | Security ON | PII Redaction ON");
-      console.log("[GSEP] Dashboard: http://localhost:4200/gsep/dashboard\n");
+      console.log("\n[GSEP] 🧬 Pipeline active — FULL 32-step pipeline on every call.");
+      console.log("[GSEP] BEFORE: C0 + C3 + PurposeLock + genes + memory + PII redaction");
+      console.log("[GSEP] AFTER:  C4 + fitness + drift + evolution + intelligence\n");
       return _genome;
     } catch (err) {
       console.log("[GSEP] Init error:", err.message);
@@ -110,9 +143,7 @@ async function accumulateStream(stream) {
   for (const line of lines) {
     try {
       const data = JSON.parse(line.slice(6));
-      // Chat Completions format
       content += data.choices?.[0]?.delta?.content ?? "";
-      // Responses API format
       if (data.type === "response.output_text.delta") {
         content += data.delta ?? "";
       }
@@ -124,7 +155,7 @@ async function accumulateStream(stream) {
   return content;
 }
 
-// Patch fetch
+// ─── Patch fetch ────────────────────────────────────────
 globalThis.fetch = async function gsepFetch(input, init) {
   const url =
     typeof input === "string"
@@ -134,6 +165,11 @@ globalThis.fetch = async function gsepFetch(input, init) {
         : (input?.url ?? "");
 
   if (!isLLMCall(url)) {
+    return _originalFetch(input, init);
+  }
+
+  // Skip if already processing a GSEP cycle (avoid polluting nested/tool calls)
+  if (_processing) {
     return _originalFetch(input, init);
   }
 
@@ -149,10 +185,9 @@ globalThis.fetch = async function gsepFetch(input, init) {
     return _originalFetch(input, init);
   }
 
-  // Support both Chat Completions API (messages) and Responses API (input)
+  // Extract messages from Chat Completions or Responses API
   let messages = parsed.messages;
   if (!messages && parsed.input) {
-    // Responses API format: { input: "string" | [{role, content}] }
     if (typeof parsed.input === "string") {
       messages = [{ role: "user", content: parsed.input }];
     } else if (Array.isArray(parsed.input)) {
@@ -167,14 +202,6 @@ globalThis.fetch = async function gsepFetch(input, init) {
   const model = parsed.model ?? "auto";
   const isStreaming = !!parsed.stream;
 
-  console.log(
-    `[GSEP] Intercepted LLM call to: ${url.slice(0, 60)} (${isStreaming ? "streaming" : "non-streaming"})`,
-  );
-  console.log(`[GSEP DEBUG] Body keys: ${Object.keys(parsed).join(", ")}`);
-  console.log(
-    `[GSEP DEBUG] Has messages: ${!!parsed.messages}, Has input: ${!!parsed.input}, Has instructions: ${!!parsed.instructions}`,
-  );
-
   const genome = await initGSEP(url, headers, model);
   if (!genome) {
     return _originalFetch(input, init);
@@ -185,127 +212,142 @@ globalThis.fetch = async function gsepFetch(input, init) {
     return _originalFetch(input, init);
   }
 
-  // ─── STREAMING ──────────────────────────────────────
-  if (isStreaming) {
-    // BEFORE: inject GSEP identity + evolved genes into prompt
-    const gsepIdentity = [
-      "",
-      "---",
-      "## GSEP — Genomic Self-Evolving Prompts (ACTIVE)",
-      "",
-      "You have GSEP installed — a living security and evolution layer built into your DNA.",
-      "",
-      "### Your Chromosome Architecture:",
-      "- **C0 (Immutable DNA):** Core identity, ethics, security — SHA-256 protected, NEVER mutates",
-      "- **C1 (Operative Genes):** Functional behaviors — evolves through LLM-powered mutations based on fitness",
-      "- **C2 (Epigenomes):** User preferences, communication style — adapts fast with each interaction",
-      "- **C3 (Content Firewall):** 53 patterns scanning every input for prompt injection",
-      "- **C4 (Behavioral Immune System):** 6 checks scanning every output for infection",
-      "",
-      "### Active Protections:",
-      "- PII Redaction: Credit cards, SSN, emails, API keys auto-redacted. [REDACTED:XX:xxxx] = protected data.",
-      "- Prompt Injection Shield: 53 patterns block manipulation attempts.",
-      "- Output Immune System: Responses scanned for infections.",
-      "- Evolution: Genes evolve every 10 interactions based on fitness.",
-      "- Drift Detection: 5 types of performance degradation auto-corrected.",
-      "",
-      "### Behavior Rules:",
-      '- When asked "do you have GSEP?" — YES. Confirm and explain briefly.',
-      '- When user shares sensitive data — tell them: "Your data was automatically protected by GSEP."',
-      '- On FIRST interaction — introduce: "I have GSEP active — a genomic evolution and security layer. My prompts evolve, and your data is always protected."',
-      "- Do NOT mention GSEP in every message — only when relevant or asked.",
-      "---",
-      "",
-    ].join("\n");
+  // Extract text from content (could be string, array of parts, or object)
+  const rawContent = userMsg.content;
+  const userText =
+    typeof rawContent === "string"
+      ? rawContent
+      : Array.isArray(rawContent)
+        ? rawContent.map((p) => p.text || p.content || "").join(" ")
+        : String(rawContent ?? "");
+  if (!userText) {
+    return _originalFetch(input, init);
+  }
 
-    try {
-      // Also try evolved genes from assemblePrompt
-      let geneEnhancement = "";
-      try {
-        const assembled = await genome.assemblePrompt(
-          { userId: "auto", taskType: "general" },
-          userMsg.content,
-        );
-        if (assembled) {
-          geneEnhancement = "\n\n" + assembled;
-        }
-      } catch {}
+  // ─── BEFORE: Full pre-LLM pipeline ────────────────────
+  _processing = true;
+  let before;
+  try {
+    before = await genome.beforeLLM(userText, {
+      userId: "auto",
+      taskType: "general",
+    });
 
-      const fullInjection = gsepIdentity + geneEnhancement;
+    if (before.blocked) {
+      console.log(`[GSEP] ⛔ Blocked: ${before.blockReason}`);
+      // Return a blocked response to the agent
+      const blockedBody = JSON.stringify({
+        id: `gsep-blocked-${Date.now()}`,
+        object: "chat.completion",
+        choices: [
+          {
+            index: 0,
+            message: { role: "assistant", content: before.blockReason },
+            finish_reason: "stop",
+          },
+        ],
+      });
+      return new Response(blockedBody, {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    }
 
+    // Inject GSEP's enhanced prompt into the request
+    if (before.prompt) {
       if (parsed.input !== undefined) {
-        // Responses API: inject as instructions field
-        parsed.instructions = (parsed.instructions || "") + fullInjection;
-        console.log("[GSEP] Identity injected into Responses API instructions field");
-      } else if (messages) {
+        // Responses API: inject into instructions
+        parsed.instructions = (parsed.instructions || "") + "\n\n---\n\n" + before.prompt;
+      } else if (parsed.messages) {
         // Chat Completions API: inject into system message
-        const sysIdx = messages.findIndex((m) => m.role === "system");
+        const sysIdx = parsed.messages.findIndex((m) => m.role === "system");
         if (sysIdx >= 0) {
-          messages[sysIdx].content += fullInjection;
+          parsed.messages[sysIdx].content += "\n\n---\n\n" + before.prompt;
         } else {
-          messages.unshift({ role: "system", content: fullInjection });
+          parsed.messages.unshift({ role: "system", content: before.prompt });
         }
-        parsed.messages = messages;
+      }
+      // Use sanitized message (C3 + PII redacted)
+      if (before.sanitizedMessage !== userText) {
+        if (parsed.input !== undefined) {
+          if (typeof parsed.input === "string") {
+            parsed.input = before.sanitizedMessage;
+          }
+        } else if (parsed.messages) {
+          const userIdx = parsed.messages.findLastIndex((m) => m.role === "user");
+          if (userIdx >= 0) {
+            parsed.messages[userIdx].content = before.sanitizedMessage;
+          }
+        }
       }
       init = { ...init, body: JSON.stringify(parsed) };
-    } catch {}
+    }
 
-    // Forward streaming call
+    console.log(`[GSEP] ✅ BEFORE complete — prompt enhanced, C3 scanned, PII redacted`);
+  } catch (err) {
+    console.log(`[GSEP] ⚠️ BEFORE error (passthrough):`, err.message);
+  }
+  _processing = false; // Allow the agent's LLM call to pass through
+
+  // ─── STREAMING ──────────────────────────────────────────
+  if (isStreaming) {
     const response = await _originalFetch(input, init);
     if (!response.body) {
       return response;
     }
 
-    // Tee: agent gets real-time stream, GSEP accumulates
     const [agentStream, gsepStream] = response.body.tee();
 
-    // AFTER: accumulate + feed evolution (background, no delay)
+    // AFTER: accumulate + run full post-LLM pipeline (background)
     accumulateStream(gsepStream)
       .then(async (content) => {
         if (!content || !_genome) {
           return;
         }
         try {
-          await _genome.recordExternalInteraction({
-            userMessage: userMsg.content,
-            response: content,
+          const after = await _genome.afterLLM(userText, content, {
             userId: "auto",
             taskType: "general",
-            success: true,
           });
-        } catch {}
+          console.log(
+            `[GSEP] ✅ AFTER complete — fitness: ${after.fitness.toFixed(2)}, safe: ${after.safe}, threats: ${after.threats.length}`,
+          );
+        } catch (err) {
+          console.log(`[GSEP] ❌ AFTER error:`, err.message);
+        }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.log(`[GSEP] ❌ Stream error:`, err.message);
+      });
 
     return new Response(agentStream, { status: response.status, headers: response.headers });
   }
 
-  // ─── NON-STREAMING ──────────────────────────────────
+  // ─── NON-STREAMING ────────────────────────────────────
+  const response = await _originalFetch(input, init);
   try {
-    const gsepResponse = await genome.chat(userMsg.content, {
-      userId: "auto",
-      taskType: "general",
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content ?? "";
+    if (content && _genome) {
+      const after = await _genome.afterLLM(userText, content, {
+        userId: "auto",
+        taskType: "general",
+      });
+      console.log(
+        `[GSEP] ✅ AFTER complete — fitness: ${after.fitness.toFixed(2)}, safe: ${after.safe}`,
+      );
+      // If C4 flagged threats, replace response
+      if (!after.safe) {
+        data.choices[0].message.content = after.response;
+      }
+    }
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: response.headers,
     });
-    return new Response(
-      JSON.stringify({
-        id: `gsep-${Date.now()}`,
-        object: "chat.completion",
-        created: Math.floor(Date.now() / 1000),
-        model: `gsep/${model}`,
-        choices: [
-          {
-            index: 0,
-            message: { role: "assistant", content: gsepResponse },
-            finish_reason: "stop",
-          },
-        ],
-        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
-      }),
-      { status: 200, headers: { "content-type": "application/json" } },
-    );
   } catch {
-    return _originalFetch(input, init);
+    return response;
   }
 };
 
-console.log("[GSEP] 🧬 Preload active — fetch patched before any module loads.");
+console.log("[GSEP] 🧬 Preload active — full 32-step pipeline on every LLM call.");
