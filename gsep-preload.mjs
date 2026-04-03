@@ -20,6 +20,8 @@ const _originalFetch = globalThis.fetch;
 let _genome = null;
 let _initializing = null;
 let _processing = false; // Guard against nested interception
+let _lastInterceptTime = 0; // Cooldown to avoid intercepting follow-up calls
+const INTERCEPT_COOLDOWN_MS = 5000; // Only intercept one call per 5 seconds
 
 function detectAgentName() {
   if (process.env.GSEP_AGENT_NAME) {
@@ -155,8 +157,13 @@ async function accumulateStream(stream) {
   return content;
 }
 
-// ─── Patch fetch ────────────────────────────────────────
+// ─── Patch fetch (defers to native plugin if active) ────
 globalThis.fetch = async function gsepFetch(input, init) {
+  // If native GSEP plugin is active, don't intercept — plugin handles it via hooks
+  if (globalThis.__GSEP_PLUGIN_ACTIVE__) {
+    return _originalFetch(input, init);
+  }
+
   const url =
     typeof input === "string"
       ? input
@@ -168,8 +175,11 @@ globalThis.fetch = async function gsepFetch(input, init) {
     return _originalFetch(input, init);
   }
 
-  // Skip if already processing a GSEP cycle (avoid polluting nested/tool calls)
-  if (_processing) {
+  // Skip if already processing a GSEP cycle or within cooldown
+  // Genome makes multiple LLM calls per user message (tools, sub-agents).
+  // GSEP should only enhance the first call, not pollute internal ones.
+  const now = Date.now();
+  if (_processing || now - _lastInterceptTime < INTERCEPT_COOLDOWN_MS) {
     return _originalFetch(input, init);
   }
 
@@ -226,6 +236,7 @@ globalThis.fetch = async function gsepFetch(input, init) {
 
   // ─── BEFORE: Full pre-LLM pipeline ────────────────────
   _processing = true;
+  _lastInterceptTime = Date.now();
   let before;
   try {
     before = await genome.beforeLLM(userText, {
