@@ -1,34 +1,17 @@
+---
+name: canvas
+description: "Displays HTML content on connected Genoma nodes (Mac app, iOS, Android) using the canvas tool. Use when the user wants to present web content, games, visualizations, dashboards, or interactive demos on a connected node's canvas view. Supports actions including present, hide, navigate, eval, and snapshot. Handles canvas host configuration, Tailscale/LAN/loopback URL construction, live reload, and debugging of common issues such as white screens or unreachable nodes."
+---
+
 # Canvas Skill
 
 Display HTML content on connected Genoma nodes (Mac app, iOS, Android).
 
-## Overview
-
-The canvas tool lets you present web content on any connected node's canvas view. Great for:
-
-- Displaying games, visualizations, dashboards
-- Showing generated HTML content
-- Interactive demos
-
 ## How It Works
 
-### Architecture
+The canvas host serves static HTML/CSS/JS files over HTTP (port 18793). A node bridge relays canvas URLs to connected node apps, which render content in a WebView.
 
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────┐
-│  Canvas Host    │────▶│   Node Bridge    │────▶│  Node App   │
-│  (HTTP Server)  │     │  (TCP Server)    │     │ (Mac/iOS/   │
-│  Port 18793     │     │  Port 18790      │     │  Android)   │
-└─────────────────┘     └──────────────────┘     └─────────────┘
-```
-
-1. **Canvas Host Server**: Serves static HTML/CSS/JS files from `canvasHost.root` directory
-2. **Node Bridge**: Communicates canvas URLs to connected nodes
-3. **Node Apps**: Render the content in a WebView
-
-### Tailscale Integration
-
-The canvas host server binds based on `gateway.bind` setting:
+**Critical:** The URL sent to the node must match how the canvas host server is bound. The `gateway.bind` setting controls this:
 
 | Bind Mode  | Server Binds To     | Canvas URL Uses            |
 | ---------- | ------------------- | -------------------------- |
@@ -37,13 +20,7 @@ The canvas host server binds based on `gateway.bind` setting:
 | `tailnet`  | Tailscale interface | Tailscale hostname         |
 | `auto`     | Best available      | Tailscale > LAN > loopback |
 
-**Key insight:** The `canvasHostHostForBridge` is derived from `bridgeHost`. When bound to Tailscale, nodes receive URLs like:
-
-```
-http://<tailscale-hostname>:18793/__genoma__/canvas/<file>.html
-```
-
-This is why localhost URLs don't work - the node receives the Tailscale hostname from the bridge!
+Remote nodes cannot reach `localhost` URLs — always use the hostname matching the bind mode.
 
 ## Actions
 
@@ -75,13 +52,7 @@ In `~/.genoma/genoma.json`:
 
 ### Live Reload
 
-When `liveReload: true` (default), the canvas host:
-
-- Watches the root directory for changes (via chokidar)
-- Injects a WebSocket client into HTML files
-- Automatically reloads connected canvases when files change
-
-Great for development!
+When `liveReload: true` (default), the canvas host watches the root directory for changes (via chokidar), injects a WebSocket client into HTML files, and automatically reloads connected canvases when files change.
 
 ## Workflow
 
@@ -99,6 +70,12 @@ cat > ~/clawd/canvas/my-game.html << 'HTML'
 </body>
 </html>
 HTML
+```
+
+**Verify the file exists:**
+
+```bash
+ls ~/clawd/canvas/my-game.html
 ```
 
 ### 2. Find your canvas host URL
@@ -120,6 +97,14 @@ Find your Tailscale hostname:
 tailscale status --json | jq -r '.Self.DNSName' | sed 's/\.$//'
 ```
 
+**Verify the server is reachable and serving the file:**
+
+```bash
+curl http://<hostname>:18793/__genoma__/canvas/my-game.html
+```
+
+Confirm you get valid HTML back before proceeding.
+
 ### 3. Find connected nodes
 
 ```bash
@@ -138,6 +123,12 @@ canvas action:present node:<node-id> target:<full-url>
 
 ```
 canvas action:present node:mac-63599bc4-b54d-4392-9048-b97abd58343a target:http://peters-mac-studio-1.sheep-coho.ts.net:18793/__genoma__/canvas/snake.html
+```
+
+**Verify content rendered** by taking a snapshot immediately after:
+
+```
+canvas action:snapshot node:<node-id>
 ```
 
 ### 5. Navigate, snapshot, or hide
@@ -194,5 +185,4 @@ The `/__genoma__/canvas/` prefix is defined by `CANVAS_HOST_PATH` constant.
 - Keep HTML self-contained (inline CSS/JS) for best results
 - Use the default index.html as a test page (has bridge diagnostics)
 - The canvas persists until you `hide` it or navigate away
-- Live reload makes development fast - just save and it updates!
 - A2UI JSON push is WIP - use HTML files for now
