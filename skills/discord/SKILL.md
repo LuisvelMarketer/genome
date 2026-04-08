@@ -1,8 +1,8 @@
 ---
 name: discord
-description: "Discord ops via the message tool (channel=discord)."
+description: "Sends messages, manages channels, reacts to posts, creates threads, runs polls, searches server content, pins messages, and moderates users on Discord via the message tool. Use when the user asks about Discord messaging, Discord server management, Discord bot interactions, DMs, Discord notifications, Discord channel management, or any other Discord server action."
 metadata: { "genoma": { "emoji": "🎮", "requires": { "config": ["channels.discord.token"] } } }
-allowed-tools: ["message"]
+allowed-tools: "message"
 ---
 
 # Discord (Via `message`)
@@ -127,6 +127,15 @@ Edit / delete:
   "messageId": "456"
 }
 ```
+
+**Validation workflow for destructive actions (edit/delete) — follow before executing:**
+1. **Read** the channel to retrieve the message and confirm its content matches what you expect.
+2. **Verify** the `messageId` in the response matches the intended target.
+3. **Only then** proceed with the `edit` or `delete` action.
+
+These actions are irreversible. If the `messageId` cannot be confirmed, stop and ask the user to provide it explicitly.
+
+- Check gating permissions (`channels.discord.actions.moderation`) before any moderation action — it is off by default.
 
 Poll:
 

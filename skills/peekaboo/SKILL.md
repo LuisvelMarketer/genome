@@ -1,6 +1,6 @@
 ---
 name: peekaboo
-description: Capture and automate macOS UI with the Peekaboo CLI.
+description: "Uses the Peekaboo CLI to automate macOS desktop UI interactions: take screenshots, capture screen regions or windows, inspect accessibility trees, list UI elements, click buttons, type text, drag, scroll, manage apps and windows, navigate menus, and drive keyboard/mouse input. Use when the user asks to take a screenshot, capture the screen, inspect or interact with UI elements, automate macOS GUI workflows, perform desktop automation, test accessibility, or use Peekaboo CLI commands."
 homepage: https://peekaboo.boo
 metadata:
   {
@@ -33,48 +33,18 @@ Tip: run via `polter peekaboo` to ensure fresh builds.
 
 ## Features (all CLI capabilities, excluding agent/MCP)
 
-Core
+Core: `bridge`, `capture`, `clean`, `config`, `image`, `learn`, `list`,
+`permissions`, `run`, `sleep`, `tools`
 
-- `bridge`: inspect Peekaboo Bridge host connectivity
-- `capture`: live capture or video ingest + frame extraction
-- `clean`: prune snapshot cache and temp files
-- `config`: init/show/edit/validate, providers, models, credentials
-- `image`: capture screenshots (screen/window/menu bar regions)
-- `learn`: print the full agent guide + tool catalog
-- `list`: apps, windows, screens, menubar, permissions
-- `permissions`: check Screen Recording/Accessibility status
-- `run`: execute `.peekaboo.json` scripts
-- `sleep`: pause execution for a duration
-- `tools`: list available tools with filtering/display options
+Interaction: `click`, `drag`, `hotkey`, `move`, `paste`, `press`, `scroll`,
+`swipe`, `type`
 
-Interaction
+System: `app`, `clipboard`, `dialog`, `dock`, `menu`, `menubar`, `open`,
+`space`, `visualizer`, `window`
 
-- `click`: target by ID/query/coords with smart waits
-- `drag`: drag & drop across elements/coords/Dock
-- `hotkey`: modifier combos like `cmd,shift,t`
-- `move`: cursor positioning with optional smoothing
-- `paste`: set clipboard -> paste -> restore
-- `press`: special-key sequences with repeats
-- `scroll`: directional scrolling (targeted + smooth)
-- `swipe`: gesture-style drags between targets
-- `type`: text + control keys (`--clear`, delays)
+Vision: `see` — annotated UI maps, snapshot IDs, optional analysis
 
-System
-
-- `app`: launch/quit/relaunch/hide/unhide/switch/list apps
-- `clipboard`: read/write clipboard (text/images/files)
-- `dialog`: click/input/file/dismiss/list system dialogs
-- `dock`: launch/right-click/hide/show/list Dock items
-- `menu`: click/list application menus + menu extras
-- `menubar`: list/click status bar items
-- `open`: enhanced `open` with app targeting + JSON payloads
-- `space`: list/switch/move-window (Spaces)
-- `visualizer`: exercise Peekaboo visual feedback animations
-- `window`: close/minimize/maximize/move/resize/focus/list
-
-Vision
-
-- `see`: annotated UI maps, snapshot IDs, optional analysis
+Run `peekaboo <cmd> --help` for the full flag reference for any command.
 
 Global runtime flags
 
@@ -117,9 +87,17 @@ peekaboo type "Hello" --return
 
 ### See -> click -> type (most reliable flow)
 
+Always call `see` first to get a fresh annotated snapshot, verify the expected
+element IDs appear in the output, then proceed to interact.
+
 ```bash
-peekaboo see --app Safari --window-title "Login" --annotate --path /tmp/see.png
+peekaboo see --app Safari --window-title "Login" --annotate --path /tmp/see.png --json
+# Inspect the JSON output to confirm the expected element IDs (e.g. B3, T1) are present.
+# If the expected element is missing, re-run see or check --window-title matches.
+
 peekaboo click --on B3 --app Safari
+# Confirm the click succeeded (no error exit code / error message) before continuing.
+
 peekaboo type "user@example.com" --app Safari
 peekaboo press tab --count 1 --app Safari
 peekaboo type "supersecret" --app Safari --return
@@ -183,6 +161,16 @@ peekaboo hotkey --keys "cmd,shift,t"
 peekaboo press escape
 peekaboo type "Line 1\nLine 2" --delay 10
 ```
+
+## Troubleshooting & error recovery
+
+| Symptom | Recovery |
+|---|---|
+| `permissions denied` / commands silently fail | Run `peekaboo permissions` and grant Screen Recording + Accessibility in System Settings. |
+| Element not found / wrong element clicked | Re-run `peekaboo see --annotate --json` to refresh the snapshot; element IDs change after UI updates. |
+| Stale snapshot IDs | Always use the snapshot ID returned by the most recent `see` call; cache is invalidated on UI changes. |
+| Window not targeted correctly | Use `peekaboo list windows --app <App> --json` to confirm `--window-id` or exact `--window-title`. |
+| Click has no effect | Add `--space-switch` or `--bring-to-current-space` if the window is on another Space; also try `--focus-timeout-seconds`. |
 
 Notes
 
